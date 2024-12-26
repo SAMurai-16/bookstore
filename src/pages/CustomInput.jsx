@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CustomInput = () => {
+const CustomInput = (props) => {
     const {type,placeholder,className,name}=props
   return (
     <div>

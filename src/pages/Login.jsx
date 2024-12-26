@@ -19,7 +19,7 @@ const Login = () => {
                         <h3 className='text-center mb-3'>Login</h3>
                     </div>
                     <form action="" className="d-flex flex-column gap-30">
-                       < CustomInput type="text" placeholder="text" name="Email"/>
+                    < CustomInput type="text" placeholder="text" name="Email"/>
                        
                         <div>
                             <input 

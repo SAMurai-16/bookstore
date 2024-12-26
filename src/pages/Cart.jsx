@@ -36,9 +36,9 @@ const Cart = () => {
                             <p className="size">r</p>
                         </div>
                         </div>
-                    <h4 className='cart-col-2'>
+                    <div className='cart-col-2'>
                         <h5 className="price">dbsh</h5>
-                    </h4>
+                    </div>
                     <div className='cart-col-3'>
                         <div>
                             <input type="number" 
