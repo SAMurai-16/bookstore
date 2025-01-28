@@ -1,0 +1,48 @@
+.ant-layout{
+  min-height: 100vh;
+
+}
+.box{
+  width: 25%;
+  background-color: white;
+  border-radius: 10px;
+  margin: auto;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  ;
+}
+.back{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+
+}
+.demo-logo-vertical{
+  background-color: white;
+  height:63px;
+}
+.sm-logo{
+  display: none;
+}
+.ant-layout-sider-collapsed .sm-logo{
+  display: block;
+}
+.ant-layout-sider-collapsed .sm{
+  display:none;
+  transition: 0.3s;
+}
+
+.ant-layout-header h5{
+  line-height: 30px;
+}
+.ant-layout-header p{
+  line-height: 20px;
+}
+main{
+  overflow-y: scroll;
+  background-color: transparent !important;
+}
+
+gap-3{
+  gap: 3px;
+}
