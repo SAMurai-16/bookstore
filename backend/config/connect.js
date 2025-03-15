@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const dbConnect  = ()=>{
   try{
-  const conn  = mongoose.connect("mongodb+srv://goforsamyakc:ssbcc2005@cluster0.e6k9f.mongodb.net/")
+  const conn  = mongoose.connect("mongodb+srv://user2000:ssbcc2005@cluster0.qdfdz.mongodb.net/")
   console.log("Database Conneected Successfully")
 }
  catch(error){

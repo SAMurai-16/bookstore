@@ -15,6 +15,8 @@ import ForgotPaswword from "./pages/ForgotPaswword"
 import SignUp from "./pages/SignUp"
 import SingleProduct from "./pages/SingleProduct"
 import Cart from "./pages/Cart"
+import Blogs from "./pages/Blogs"
+import Checkout from "./pages/checkout"
 
 const App = () => {
   return (
@@ -31,6 +33,8 @@ const App = () => {
          <Route path="compare" element={<CompareProducts/>}/>
          <Route path="wishlist" element={<Wishlist/>}/>
          <Route path="login" element={<Login/>}/>
+         <Route path="blogs" element={<Blogs/>}/>
+         <Route path="checkout" element={<Checkout/>}/>
          <Route path="forgot-password" element={<ForgotPaswword/>}/>
          <Route path="signup" element={<SignUp/>}/>
 

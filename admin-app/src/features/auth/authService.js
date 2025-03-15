@@ -4,8 +4,9 @@ import { base_url } from "../../utils/base_url"
 const getTokenfromLocalStorage = localStorage.getItem("user")? JSON.parse(localStorage.getItem('user')):null
 
 const config =  {
+  
     headers:{
-        Authorization:`Bearer ${getTokenfromLocalStorage.token}`
+        Authorization: getTokenfromLocalStorage ? `Bearer ${getTokenfromLocalStorage.token}` : "",
     }
 }
 

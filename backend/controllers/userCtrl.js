@@ -307,41 +307,19 @@ const loginAdmin = asynchandler(async (req,res)=> {
 
 
 const usercart = asynchandler(async(req,res)=>{
+    const{ProductId,quantity,price} = req.body;
     const{_id} = req.user;
-    const{cart} = req.body;
+
     
     console.log(_id);
     
     try{
-        let products = [];
-        const user1 = await User.findById(_id);
-        const alreadyExistCart = await Cart.findOne({orderby : user1._id})
-
-        if (alreadyExistCart) {
-            await Cart.deleteOne({ _id: alreadyExistCart._id });
-        }
-    
-        for(let i = 0; i<cart.length;i++){
-            let object = {};
-            object.product = cart[i]._id;
-            object.count = cart[i].count;
-            object.color = cart[i].color;
-            let getPrice = await Product.findById(cart[i]._id).select("price").exec();
-            object.price = getPrice.price;
-            products.push(object);
-            
-        }
-        let cartTotal = 0;
-        for(let i = 0; i<products.length; i ++){
-            cartTotal = cartTotal + products[i].price* products[i].count ;
-
-        }
-        console.log(cartTotal);
-        
         let newCart  = await new Cart({
-            products,
-            cartTotal:cartTotal,
-            orderby: user1?._id,
+            userId:_id,
+            ProductId,
+            price,
+            quantity 
+           
         }).save();
         
         res.json(newCart);
@@ -377,12 +355,29 @@ const usercart = asynchandler(async(req,res)=>{
 const getUserCart = asynchandler(async(req,res)=>{
     const{_id} = req.user;
     try{
-        const cart  = await Cart.findOne({orderby: _id}).populate("products.product");
+        const cart  = await Cart.find({userId: _id}).populate("ProductId");
         res.json(cart);
     }
     catch(error){
         throw new Error(error);
 
+    }
+})
+
+const deletefromcart  = asynchandler(async(req,res)=>{
+    const {_id} = req.user;
+    const {id} = req.params;
+    console.log(_id);
+    console.log(id);
+    
+    
+    try{
+        const deletefromCart  =  await Cart.deleteOne({userId:_id,_id:id})
+        res.json(deletefromCart)
+
+    }
+    catch(error){
+        throw new Error(error) 
     }
 })
 
@@ -470,6 +465,30 @@ const saveaddress = asynchandler(async(req,res)=>{
 
 })
 
+const createCoupon = asynchandler(async(req,res)=>{
+    const {name,expiry,discount} = req.body;
+    try{
+        const createCoupon  = await Coupon.create({name:name,expiry:expiry,discount:discount})
+        res.json(createCoupon)
+
+
+    }
+    catch(error){
+        throw new Error(error)
+    }
+
+})
+
+const getallCoupons = asynchandler(async(req,res)=>{
+    try{
+        const getallCoupons  =  await Coupon.find()
+        res.json(getallCoupons)
+    }
+    catch(error){
+        throw new Error(error)
+    }
+})
+
 const applyCoupon = asynchandler(async(req,res)=>{
     const {coupon}  =  req.body;
     const { _id} = req.user;
@@ -484,7 +503,7 @@ const applyCoupon = asynchandler(async(req,res)=>{
     const user = await User.findById(_id)
     console.log(user._id);
     
-    let {cartTotal}  = await Cart.findOne({orderby:user._id})
+    let {cartTotal}  = await Cart.findOne({userId:user._id})
     
     
     let totalAfterDiscount  = (cartTotal - 
@@ -502,51 +521,22 @@ const applyCoupon = asynchandler(async(req,res)=>{
 })
 
 const createOrder = asynchandler(async(req,res)=>{
-    const {COD,couponApplied}  = req.body;
-    const{_id}  = req.user;
+    const{orderItems,totalPrice, totalPriceAfterDiscount,paymentInfo } = req.body;
+    const{_id} = req.user;
     try{
-        if(!COD){throw new Error ("Create cash order failed")}
-        const user  = await User.findById(_id);
-        let userCart  = await Cart.findOne({orderby: user._id})
-        let finalAmount = 0;
-        if(couponApplied && userCart.totalAfterDiscount){
-            finalAmount = userCart.totalAfterDiscount;
+       const order = await Order.create({orderItems,totalPrice, totalPriceAfterDiscount,paymentInfo,user:_id
 
-        }
-        else{
-            finalAmount = userCart.cartTotal;
-            }
-        let newOrder = await new Order({
-            products: userCart.products,
-            paymentIntent:{
-                id: uniqid(),
-                method:"COD",
-                amount: finalAmount,
-                status:"Cash On Delivery",
-                created: Date.now(),
-                currency:"inr"
-            },
-            orderby: user._id,
-            orderStatus:"Cash on Delivery"
-        }).save()
-        let update = userCart.products.map((item)=>{
-            return{
-                updateOne:{
-                    filter:{_id: item.product._id},
-                    update:{$inc: {quantity: -item.count, sold: +item.count}}
-                }
-            }
-        })
-        const updated = await Product.bulkWrite(update,{})
-        res.json({message:"success"})
-        console.log(updated);
-        
-        }
-    
-    catch(error){
-        throw new Error (error);
-
+       })
+       res.json({
+        order,
+        success:true,
+    })
     }
+    catch(error){
+        throw new Error(error)
+    }
+
+
 
 
 })
@@ -642,11 +632,11 @@ module.exports = { CreateUser,
     baby,
     getUserCart,
     emptyCart,
-    applyCoupon,
+    deletefromcart,
     createOrder,
-    getallOrders,
-    getOrders,
-    updateorderstatus
+    createCoupon,
+    getallCoupons,
+    applyCoupon
 
     };
  

@@ -80,7 +80,7 @@ const getAllProduct  = asynchandler(async(req,res)=>{
         const excludeFields = ["page","sort","limit","fields"]
     
     excludeFields.forEach((el)=> delete queryObj[el])
-    console.log(queryObj);
+   
     let queryStr = JSON.stringify(queryObj)
     queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g  , (match)=>`$${match}`)
     let query = Product.find(JSON.parse(queryStr))
@@ -109,7 +109,6 @@ query = query.sort('-createdAt')
      const page = req.query.page
      const limit  = req.query.limit
      const skip = (page - 1 )*limit
-     console.log(page,limit,skip)
      query = query.skip(skip).limit(limit)
      if(req.query.page){
         const productCount = await Product.countDocuments()
@@ -125,49 +124,47 @@ query = query.sort('-createdAt')
 });
 
 
-const addtowishlist = asynchandler(async(req,res)=>{
-    const{_id} = req.user;
-    console.log(_id);
-    const {prodId} = req.body;
-    try{
-        const user = await User.findById(_id);
-        const alreadyadded =  user.wishlist.find((id)=> id.toString()===prodId);
-        if(alreadyadded){
-            let user = await User.findByIdAndUpdate(
-                _id,
-                {
-                    $pull: {wishlist: prodId},
+const  addtowishlist = asynchandler(async (req, res) => {
+    const userId = req?.user?._id;
 
-                },
-                {
-                    new:true,
-                }
+    
+    if (!userId) {
+        res.status(401);
+        throw new Error("User not authenticated");
+    }
 
-            )
-            res.json(user);
-        } else{
-            let user = await User.findByIdAndUpdate(
-                _id,
-                {
-                    $push:{wishlist:prodId},
-                },
-                {
-                    new:true,
-                }
-            );
-            res.json(user);
+    const { prodId } = req.body;
+ 
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            res.status(404);
+            throw new Error("User not found");
         }
 
+        const alreadyAdded = user.wishlist.includes(prodId);
 
+        let updatedUser;
+        if (alreadyAdded) {
+            updatedUser = await User.findByIdAndUpdate(
+                userId,
+                { $pull: { wishlist: prodId } },
+                { new: true }
+            );
+        } else {
+            updatedUser = await User.findByIdAndUpdate(
+                userId,
+                { $push: { wishlist: prodId } },
+                { new: true }
+            );
+        }
 
+        res.json(updatedUser);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
-    catch(error)
-    {
-        throw new Error(error);
-    }
-
-
 });
+
 
 const rating = asynchandler(async(req,res)=>{
     const {_id} = req.user;

@@ -1,10 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Breadcrumb from './breadcrumb'
 import {Helmet} from "react-helmet";
 import meta from '../components/meta';
 import Productcart from './Productcart';
+import { useDispatch, useSelector } from 'react-redux';
+import { getallProducts } from '../features/product/productSlice';
+
+
+
 const OurStore = () => {
+    const dispatch = useDispatch();
+    const productState = useSelector(state=>state.prod.product);
+   
+    
     const [grid, setgrid] = useState(4)
+
+    useEffect(() => {
+        dispatch(getallProducts()); // Runs only once when component mounts
+    }, []);
+    
     
   return (
     
@@ -162,10 +176,8 @@ const OurStore = () => {
                     </div>
                     <div className="product-list pb-5 d-flex gap-10
                     mb-5 flex-wrap ">
-                        <Productcart grid={grid}/>
-                        <Productcart grid={grid}/>
-                        <Productcart grid={grid}/>
-                        <Productcart grid={grid}/>
+                        <Productcart data={productState} grid={grid}/>
+                 
                     </div>
 
                 </div>
