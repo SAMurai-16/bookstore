@@ -9,9 +9,8 @@ const uniqid = require("uniqid")
 const asynchandler = require("express-async-handler")
 const {GenerateRefreshToken, createPasswordResetToken} = require("../config/refreshtoken")
 const jwt = require("jsonwebtoken");
-const {validateMongoDbId} = require("../utils/validateMongoDbId");
-const crypto = require('crypto');
-const { log } = require("util");
+
+
 const sendEmail = require("../utils/emailService")
 
 
@@ -128,7 +127,7 @@ res.json({getaUser})
 
 const deleteaUser = asynchandler(async(req,res)=>{
     const {id} = req.params;
-    validateMongoDbId(id)
+ 
     try{
 const deleteaUser = await User.findByIdAndDelete(id)
 res.json({deleteaUser})
@@ -144,7 +143,7 @@ res.json({deleteaUser})
 
 const updateUser = asynchandler(async(req,res)=>{
     const{ _id} = req.user
-    validateMongoDbId(_id)
+
 
     try{
     const updateUser = await User.findByIdAndUpdate(_id,{
@@ -214,7 +213,7 @@ RefreshToken, process.env.secret , (err,decoded)=>{
 const updatePassword = asynchandler(async(req,res)=>{
     const {_id} = req.user;
     const {password} = req.body;
-    validateMongoDbId(_id)
+ 
     const user  = await User.findById(_id)
     if(password){
         user.password = password ;
