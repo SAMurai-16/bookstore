@@ -4,4 +4,4 @@ const validateMongoDbId = (_id)=>{
     if(!isValid) throw new Error("This Id is not valid or not found")
 }
 
-module.exports = validateMongoDbId
+module.exports = {validateMongoDbId}
