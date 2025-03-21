@@ -1,121 +1,107 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { BsLinkedin,BsInstagram,BsGithub,BsYoutube } from 'react-icons/bs'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { BsLinkedin, BsInstagram, BsGithub, BsYoutube } from 'react-icons/bs';
 
 const Footer = () => {
   return (
     <>
-    <footer className='py-4'>
-        <div className="conatiner-xxl">
-            <div className="row align-items-center">
-                <div className="col-5">
-                    <div className='footer-top-data d-flex gap-30 align-items-center text-white'>
-                        <img src="images/newsletter.png" alt="newsletter mb-0" />
-                        <h2>
-                            Sign Up For Newsletter
-                        </h2>
-
-                    </div>
-                </div>
-                <div className="col-7">
-                    <div className="input-group">
-                        <input type="text" className="form-control py-2" placeholder="Your Email Adress" aria-label="Your Email Address" aria-describedby="basic-addon2"/>
-                        <span className="input-group-text p-1" id="basic-addon2">
-                        Subscribe
-                     </span>
-
-                    </div>
-   
-
-                </div>
+      {/* Newsletter Signup */}
+      <footer className='py-4 px-5'>
+        <div className="container-xxl">
+          <div className="row align-items-center">
+            <div className="col-md-5">
+              <div className='footer-top-data d-flex gap-30 align-items-center text-white'>
+                <img src="images/newsletter.png" alt="newsletter" />
+                <h2>Subscribe for Book Updates</h2>
+              </div>
             </div>
+            <div className="col-md-7">
+              <div className="input-group">
+                <input type="text" className="form-control py-2" placeholder="Your Email Address" aria-label="Your Email Address" />
+                <span className="input-group-text p-1">Subscribe</span>
+              </div>
+            </div>
+          </div>
         </div>
-    </footer>
-    <footer className='py-4'>
+      </footer>
+
+      {/* Footer Links Section */}
+      <footer className='py-4 px-3'>
         <div className="container-xxl">
-            <div className="row">
-                <div className="col-4">
-                     <h4 className='text-white'>
-                        Contact Us
-                    </h4> 
-                    <div className='footer-links d-flex flex-column'>
-                        <address className='text-white fs-6'>Hno : 1600 Near Chanchala bai College,
-                            Jabalpur, MP<br/>
-                            Pincode: 482002
-                        </address>
-                        <a href="tel: +91 8884569089" className='mt-4 d-block mb-3 text-white'>+91 8884569089</a>
-                        <a href="mailto: goforsamyak.c@gmail.com" className=' d-block mb-3 text-white'>goforsamyak.c@gmail.com</a>
-                        <div className='socail-icons d-flex align-items-center gap-30'>
-                            <a className='text-white fs-4'>
-                                <BsGithub/>
-                            </a>
-                            <a className='text-white fs-4'> 
-                                <BsInstagram/>
-                            </a>
-                            <a className='text-white fs-4'>
-                                <BsLinkedin/>
-                            </a>
-                            <a className='text-white fs-4'>
-                                <BsYoutube/>
-                            </a>
-                        </div>
-                    </div>                    
-
-
-             </div>
-                <div className="col-3">
-                    <h4 className='text-white'>
-                        Information
-                    </h4>
-                    <div className='footer-links d-flex flex-column'>
-                        <Link className="text-white py-2 mb-1">Privacy Policy</Link>
-                        <Link className="text-white py-2 mb-1">Refund Policy</Link>
-                        <Link className="text-white py-2 mb-1">Shipping Policy</Link>
-                        <Link className="text-white py-2 mb-1">Terms & Conditions</Link>
-                        <Link className="text-white py-2 mb-1">Blogs</Link>
-                    </div>
-                </div>
-                <div className="col-3">
-                    <h4 className='text-white'>
-                        Account
-                    </h4>
-                    <div className='footer-links d-flex flex-column'>
-                        <Link className="text-white py-2 mb-1">About</Link>
-                        <Link className="text-white py-2 mb-1">Faq</Link>
-                        <Link className="text-white py-2 mb-1">Contact</Link>
-                        <Link className="text-white py-2 mb-1">Size Chart</Link>
-                    </div>
-                </div>
-                <div className="col-2">
-                    <h4 className='text-white'>
-                        Quick LInks
-                    </h4>
-                    <div className='footer-links d-flex flex-column'>
-                        <Link className="text-white py-2 mb-1">Laptops</Link>
-                        <Link className="text-white py-2 mb-1">Headphones</Link>
-                        <Link className="text-white py-2 mb-1">Tablet</Link>
-                        <Link className="text-white py-2 mb-1">Watches</Link>
-                    </div>
-                </div>
-             </div>
-
-        </div>
-    </footer>
-    <footer className='py-3'>
-        <div className="container-xxl">
-            <div className="row">
-                <div className="col-12">
-                    <p className='text-center text-white mb-0' >
-                        &copy; {new Date().getFullYear()}; Powered by SAMurai
-
-                    </p>
+          <div className="row">
             
-                 </div>
+            {/* Contact Section */}
+            <div className="col-md-4">
+              <h4 className='text-white'>Contact Us</h4>
+              <div className='footer-links d-flex flex-column'>
+                <address className='text-white fs-6'>
+                  Book Haven, 12th Street,<br />
+                  New Delhi, India<br />
+                  Pincode: 110001
+                </address>
+                <a href="tel:+91 9995678080" className='text-white mt-2'>+91 9995678080</a>
+                <a href="mailto:support@bookhaven.com" className='text-white mt-2'>support@bookhaven.com</a>
+                <div className='social-icons d-flex align-items-center gap-3 mt-3'>
+                  <a className='text-white fs-4'><BsGithub /></a>
+                  <a className='text-white fs-4'><BsInstagram /></a>
+                  <a className='text-white fs-4'><BsLinkedin /></a>
+                  <a className='text-white fs-4'><BsYoutube /></a>
+                </div>
+              </div>
             </div>
-        </div>
-    </footer>
-    </>
-  )
-}
 
-export default Footer
+            {/* Information Section */}
+            <div className="col-md-3">
+              <h4 className='text-white'>Information</h4>
+              <div className='footer-links d-flex flex-column'>
+                <Link className="text-white py-2">Privacy Policy</Link>
+                <Link className="text-white py-2">Refund Policy</Link>
+                <Link className="text-white py-2">Shipping Policy</Link>
+                <Link className="text-white py-2">Terms & Conditions</Link>
+                <Link className="text-white py-2">Blogs</Link>
+              </div>
+            </div>
+
+            {/* Customer Service Section */}
+            <div className="col-md-3">
+              <h4 className='text-white'>Customer Service</h4>
+              <div className='footer-links d-flex flex-column'>
+                <Link className="text-white py-2">Order Tracking</Link>
+                <Link className="text-white py-2">FAQs</Link>
+                <Link className="text-white py-2">Contact Support</Link>
+                <Link className="text-white py-2">Gift Cards</Link>
+              </div>
+            </div>
+
+            {/* Book Categories Section */}
+            <div className="col-md-2">
+              <h4 className='text-white'>Categories</h4>
+              <div className='footer-links d-flex flex-column'>
+                <Link className="text-white py-2">Fiction</Link>
+                <Link className="text-white py-2">Non-Fiction</Link>
+                <Link className="text-white py-2">Children’s Books</Link>
+                <Link className="text-white py-2">Bestsellers</Link>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </footer>
+
+      {/* Copyright Section */}
+      <footer className='py-3'>
+        <div className="container-xxl">
+          <div className="row">
+            <div className="col-12">
+              <p className='text-center text-white mb-0'>
+                &copy; {new Date().getFullYear()} Book Haven | Powered by SAMurai
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+};
+
+export default Footer;

@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactStars from 'react-stars'
 import { Link, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { addtoWishlist } from '../features/product/productSlice';
+import { FaHeart } from "react-icons/fa";
+import { getUserWishlist } from '../features/user/userSlice';
 
 
 const Productcart = (props) => {
@@ -12,11 +14,20 @@ const dispatch = useDispatch()
 
 
   const addtolist = (id)=>{
-    alert(id);
+   
     
     dispatch(addtoWishlist(id))
 
   }
+
+    useEffect(() => {
+      const fetchWishlist = async () => {
+        await dispatch(getUserWishlist()); // Wait for API response
+         // Set loading to false after fetching
+      };
+      fetchWishlist();
+    }, [dispatch]);
+    const authState = useSelector((state) => state.auth?.user?.wishlist || []);
   
     let location  = useLocation();
   return (
@@ -27,9 +38,17 @@ const dispatch = useDispatch()
             <div key={index}
             className={`${location.pathname=="/OurStore" ? `gr-${grid}` : "col-3" } d-flex`}> 
              <Link to={item?._id} className="product-card position-relative "> 
-                <div className="wishlist-icon position-absolute">
-                    <button className='border-0' onClick={(e)=>{addtolist(item?._id)}}>
-                    <img src="images/wish.svg" alt="" /></button>
+                <div className="wishlist-icon position-absolute z-10">
+                    <button className='border-0 bg-transparent' onClick={(e)=>
+                       
+                      
+                      { e.preventDefault()
+                        addtolist(item?._id)}}>
+                     {
+                                            authState.some(auth=>
+                                              auth?._id === item?._id)
+                                             ? <FaHeart color="red"/> : <FaHeart color="black"/> 
+                                          }</button>
                     
                 </div>
                 <div className="product-image d-flex justify-content-center">
@@ -56,19 +75,7 @@ const dispatch = useDispatch()
                          
                     <p className='price'>Rs {item?.price}</p>
                 </div>
-                <div className="action-bar position-absolute z-10">
-                    <div className=' d-flex flex-column gap-15'>
-                    <button className='border-0 bg-transparent' >
-                    <img src="images/prodcompare.svg" alt="compare" />
-                    </button >
-                    <button className='border-0 bg-transparent' >
-                    <img src="images/view.svg" alt="view" />
-                    </button >
-                    <button className='border-0 bg-transparent' >
-                    <img src="images/add-cart.svg" alt="addcart" />
-                    </button >
-                    </div>
-                </div>
+               
              </Link> 
           
         </div>

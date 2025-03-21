@@ -41,7 +41,8 @@ const AddProduct = () => {
         brand:'',
         category:'',
         quantity:'',
-        images:''
+        images:'',
+        tag:""
       },
         validationSchema: Yup.object({
           title: Yup.string()
@@ -172,6 +173,15 @@ const AddProduct = () => {
                 formik.touched.price && formik.errors.price
             }
         </div>
+        <Custominput 
+          label="Product Tag"
+          name="price" 
+          placeholder="Enter product tag" 
+          onCh={formik.handleChange('tag')}
+          type="text" 
+          val={formik.values.tag}
+        />
+    
 
         {/* Brand Selection */}
         <div style={{ marginBottom: '15px' }}>

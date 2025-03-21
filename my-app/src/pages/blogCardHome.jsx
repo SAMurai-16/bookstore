@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import moment from 'moment';
 const BlogCard = (props) => {
     const{data}=props
-    console.log(data);
-    
 
 
   return (
@@ -26,7 +24,7 @@ const BlogCard = (props) => {
                                {item?.title}
                             </h5>
                             <p className='desc'>{item?.description}</p>
-                            <Link to={item?._id} className='button'>Read More</Link>
+                            <Link to={`blog/${item?._id}`} className='button'>Read More</Link>
                         
                         </div>
                 </div>

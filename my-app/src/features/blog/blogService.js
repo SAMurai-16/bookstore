@@ -19,8 +19,15 @@ const addtoWishlist = async(prodId)=>{
     }
 }
 
+const getaBlog  = async(id)=>{
+    const response =await axios.get(`${base_url}blog/${id}`);
+    if(response.data){
+        return response.data;
+    }
+}
+
 
 
 export const blogService={
-    getblogs,addtoWishlist
+    getblogs,addtoWishlist,getaBlog
 }

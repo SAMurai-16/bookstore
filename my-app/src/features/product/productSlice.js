@@ -3,9 +3,9 @@ import { prodService } from "./productService"
 
 
 
-export const getallProducts = createAsyncThunk("prod/getall",async(_,thunkAPI)=>{
+export const getallProducts = createAsyncThunk("prod/getall",async(data,thunkAPI)=>{
     try{
-        return await prodService.getProducts()
+        return await prodService.getProducts(data)
 
 
 
@@ -41,6 +41,21 @@ export const getProduct = createAsyncThunk("prod/getaprod",async(id,thunkAPI)=>{
 
     }
 })
+
+export const ratings = createAsyncThunk("prod/rating",async(data,thunkAPI)=>{
+    try{
+        return await prodService.giveratings(data)
+
+
+
+    }
+    catch(error){
+        return thunkAPI.rejectWithValue(error)
+
+    }
+})
+
+
 
 
 
@@ -91,9 +106,23 @@ export const productSlice = createSlice({
             state.isLoading=false;
             state.isError=false;
             state.isSuccess=true;
-            state.product = action.payload; 
+            state.singleproduct = action.payload; 
             state.message = "Product fetched"
         }).addCase(getProduct.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isSuccess=false;
+            state.isError=true;
+            state.message=action.error;
+        })
+        .addCase(ratings.pending,(state)=>{
+            state.isLoading=true;
+        }).addCase(ratings.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;
+            state.ratings = action.payload; 
+            state.message = "Product fetched"
+        }).addCase(ratings.rejected,(state,action)=>{
             state.isLoading=false;
             state.isSuccess=false;
             state.isError=true;

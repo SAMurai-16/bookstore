@@ -100,6 +100,89 @@ export const getAllCoupons =  createAsyncThunk("coupon/all",async(_,thunkAPI)=>{
     }
 })
 
+export const createOrder=  createAsyncThunk("order/create",async(orderDetail,thunkAPI)=>{
+    try{
+        return await authService.createOrder(orderDetail)
+
+
+
+    }
+    catch(error){
+        return thunkAPI.rejectWithValue(error)
+
+    }
+})
+export const getallOrders=  createAsyncThunk("order/getall",async(_,thunkAPI)=>{
+    try{
+        return await authService.getallOrders()
+
+
+
+    }
+    catch(error){
+        return thunkAPI.rejectWithValue(error)
+
+    }
+})
+
+export const EmptyCart=  createAsyncThunk("cart/empty",async(_,thunkAPI)=>{
+    try{
+        return await authService.emptyCart()
+
+
+
+    }
+    catch(error){
+        return thunkAPI.rejectWithValue(error)
+
+    }
+})
+
+
+export const updateUser=  createAsyncThunk("user/update",async(data,thunkAPI)=>{
+    try{
+        return await authService.updateUser(data)
+
+
+
+    }
+    catch(error){
+        return thunkAPI.rejectWithValue(error)
+
+    }
+})
+
+export const forgotPassword=  createAsyncThunk("pass/forgot",async(data,thunkAPI)=>{
+    try{
+        return await authService.forgotPassword(data)
+
+
+
+    }
+    catch(error){
+        return thunkAPI.rejectWithValue(error)
+
+    }
+})
+
+export const resetPassword=  createAsyncThunk("pass/new",async(data,thunkAPI)=>{
+    try{
+        return await authService.resetPassword(data)
+
+
+
+    }
+    catch(error){
+        return thunkAPI.rejectWithValue(error)
+
+    }
+})
+
+
+
+
+
+
 
 const getcustomerFromLocalStorage = localStorage.getItem("customer")
 ? JSON.parse(localStorage.getItem("customer")):null;
@@ -219,6 +302,112 @@ export const AuthSlice = createSlice({
             state.isError=true;
             state.message=action.payload;
         })
+        .addCase(createOrder.pending,(state)=>{
+            state.isLoading=true;
+        }).addCase(createOrder.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;
+            state.createdOrder= action.payload;
+     
+
+        }).addCase(createOrder.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isSuccess=false;
+            state.isError=true;
+            state.message=action.payload;
+        })
+        .addCase(getallOrders.pending,(state)=>{
+            state.isLoading=true;
+        }).addCase(getallOrders.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;
+            state.Orders= action.payload;
+     
+
+        }).addCase(getallOrders.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isSuccess=false;
+            state.isError=true;
+            state.message=action.payload
+        })
+        .addCase(EmptyCart.pending,(state)=>{
+            state.isLoading=true;
+        }).addCase(EmptyCart.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;
+            state.cart= action.payload;
+     
+
+        }).addCase(EmptyCart.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isSuccess=false;
+            state.isError=true;
+            state.message=action.payload
+        })
+        .addCase(updateUser.pending,(state)=>{
+            state.isLoading=true;
+        }).addCase(updateUser.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;
+            state.user= action.payload;
+     
+
+        }).addCase(updateUser.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isSuccess=false;
+            state.isError=true;
+            state.message=action.payload
+        })
+        .addCase(forgotPassword.pending,(state)=>{
+            state.isLoading=true;
+        }).addCase(forgotPassword.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;
+            state.token= action.payload;
+            if(state.isSuccess){
+                alert("Email sent Successfully")
+            }
+     
+
+        }).addCase(forgotPassword.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isSuccess=false;
+            state.isError=true;
+            state.message=action.payload
+
+
+        })
+        .addCase(resetPassword.pending,(state)=>{
+            state.isLoading=true;
+        }).addCase(resetPassword.fulfilled,(state,action)=>{
+            state.isLoading=false;
+            state.isError=false;
+            state.isSuccess=true;
+            state.pass= action.payload;
+            if(state.isSuccess){
+                alert("Password reset Successfully")
+            }
+          
+
+        }).addCase(resetPassword.rejected,(state,action)=>{
+            state.isLoading=false;
+            state.isSuccess=false;
+            state.isError=true;
+            state.message=action.payload
+            if(state.isError){
+                alert("Token Expired")
+            }
+        })
+
+
+
+
+        
     }
 })
 

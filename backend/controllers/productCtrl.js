@@ -47,7 +47,7 @@ const updateProduct = asynchandler(async (req, res) => {
 const getaProduct = asynchandler(async(req,res)=>{
     const {id} = req.params;
     try{
-        const findProduct = await Product.findById(id);
+        const findProduct = await Product.findById(id).populate("ratings.postedby", "firstname lastname email");;
         res.json(findProduct)
 
     } catch (error){
@@ -166,68 +166,71 @@ const  addtowishlist = asynchandler(async (req, res) => {
 });
 
 
-const rating = asynchandler(async(req,res)=>{
-    const {_id} = req.user;
-    const{ star, prodId,comment} = req.body;
-    try{
-        const product = await Product.findById(prodId);
-        let alreadyrated  = product.ratings.find((userId)=>userId.postedby.toString()===_id.toString());
-        if(alreadyrated){
-            const updaterating = await Product.updateOne(
-                {
-                    ratings:{$elemMatch: alreadyrated},
-                },
-                {
-                    $set: {"ratings.$.star":star,"ratings.$.comment":comment},
-                },
-                {
-                    new:true,
-                }
-            )
-           
+const rating = asynchandler(async (req, res) => {
+    const { _id } = req.user;
+    const { star, prodId, comment } = req.body;
 
-        } else  {
-            const rateproduct  = await Product.findByIdAndUpdate(
+    try {
+        const product = await Product.findById(prodId);
+        let alreadyRated = product.ratings.find(
+            (rating) => rating.postedby.toString() === _id.toString()
+        );
+
+        if (alreadyRated) {
+            // Update existing rating
+            await Product.updateOne(
+                { ratings: { $elemMatch: alreadyRated } },
+                {
+                    $set: {
+                        "ratings.$.star": star,
+                        "ratings.$.comment": comment,
+                    },
+                }
+            );
+        } else {
+            // Push new rating with user reference
+            await Product.findByIdAndUpdate(
                 prodId,
                 {
-                    $push:{
+                    $push: {
                         ratings: {
-                            star:star,
-                            comment:comment,
-                            postedby:_id,
+                            star: star,
+                            comment: comment,
+                            postedby: _id, // Ensure this references User model
                         },
-
-                    }
-
+                    },
                 },
-                {new:true}
-
-            )
-            
+                { new: true }
+            );
         }
-        const getallratings = await Product.findById(prodId);
-        let totalrating =  getallratings.ratings.length;
-        let ratingsum  =  getallratings.ratings.map((item)=>item.star).reduce((prev,curr)=> prev+curr, 0 );
-        let actualrating = Math.round(ratingsum/totalrating);
-        let finalproduct = await Product.findByIdAndUpdate(
+
+        // Recalculate total ratings
+        const updatedProduct = await Product.findById(prodId).populate(
+            "ratings.postedby",
+            "firstname lastname email" // Populate user details
+        );
+
+        const totalRatings = updatedProduct.ratings.length;
+        const ratingSum = updatedProduct.ratings
+            .map((item) => item.star)
+            .reduce((prev, curr) => prev + curr, 0);
+        const actualRating = Math.round(ratingSum / totalRatings);
+
+        // Update product with new average rating
+        const finalProduct = await Product.findByIdAndUpdate(
             prodId,
-            {
-                totalratings : actualrating,
-            },
-            {new:true}
-        )
-        res.json(finalproduct)
+            { totalratings: actualRating },
+            { new: true }
+        ).populate("ratings.postedby", "firstname lastname email"); // Populate again
 
-
-
-
-    }
-    catch(error){
+        res.json(finalProduct);
+    } catch (error) {
         throw new Error(error);
-
     }
+});
 
-})
+
+
 
 
 

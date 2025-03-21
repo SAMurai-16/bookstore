@@ -1,191 +1,209 @@
-import React, { useEffect, useState } from 'react'
-import Breadcrumb from './breadcrumb'
-import {Helmet} from "react-helmet";
-import meta from '../components/meta';
+import React, { useEffect, useState } from 'react';
+import Breadcrumb from './breadcrumb';
+import { useLocation } from 'react-router-dom';
 import Productcart from './Productcart';
 import { useDispatch, useSelector } from 'react-redux';
 import { getallProducts } from '../features/product/productSlice';
-
-
+import { getUserWishlist } from '../features/user/userSlice';
 
 const OurStore = () => {
     const dispatch = useDispatch();
-    const productState = useSelector(state=>state.prod.product);
-   
+    const productState = useSelector(state => state.prod.product);
+    const location = useLocation();
     
-    const [grid, setgrid] = useState(4)
+    const [grid, setGrid] = useState(4);
+    const [brands, setBrands] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [brand, setBrand] = useState(null);
+    const [category, setCategory] = useState(null);
+    const [minPrice, setMinPrice] = useState(null);
+    const [maxPrice, setMaxPrice] = useState(null);
+    const [sort, setSort] = useState(null);
+    const [tags,setTags] = useState([])
+    const [tag,setTag] = useState(null)
+
+
 
     useEffect(() => {
-        dispatch(getallProducts()); // Runs only once when component mounts
-    }, []);
+        const params = new URLSearchParams(location.search);
+        const tagFromURL = params.get('tag');
+        if (tagFromURL) {
+            setTag(tagFromURL);
+        }
+        const categoryFromURL = params.get('category');
+        if (categoryFromURL) {
+            setCategory(categoryFromURL);
+        }
+        
+    }, [location.search]);
     
     
-  return (
+
+    useEffect(() => {
+        const newBrands = [...new Set(productState.map(item => item.brand))];
+        const newCategories = [...new Set(productState.map(item => item.category))];
+        const newTag = [...new Set(productState.map(item => item.tag))]
+        setTags(newTag)
+        setBrands(newBrands);
+        setCategories(newCategories);
+    }, [productState]);
+
+    useEffect(() => {
+        dispatch(getallProducts({ sort, brand, category,tag, minPrice, maxPrice }));
+ }, [sort, brand, category, minPrice, maxPrice,tag,dispatch]);
+
+
+    useEffect(() => {
+        const fetchWishlist = async () => {
+            const token = localStorage.getItem("customer");
+            if (token) {
+                dispatch(getUserWishlist());
+            }
+        };
     
+        fetchWishlist();
+    }, [dispatch]);  // Keeping only `dispatch` in dependency to avoid unnecessary calls
     
-    <>
-    <Helmet>
-        <meta title="Our Store"/>
-                <meta charSet="utf-8" />
-                <title>Our Store</title>
-              
-            </Helmet>
-      <Breadcrumb title= "Our Store"/>
-      <div className="store-wrapper home-wrapper-2 py-5">
-        <div className="conatainer-xl">
-            <div className="row">
-                <div className="col-3">
-                    
-                        <div className="filter-card mb-3">
-                            <h4 className='filter-title pl-0 ml-0'>Shop by Categories </h4>
-                            <div>
+
+
+    return (
+        <>
+          <div className="store-banner text-center m-2 position-relative" 
+    style={{ height: 300, overflow: 'hidden', borderRadius: '15px' }}>
+    
+    {/* Background Image */}
+    <img 
+        src="https://bostonglobe-prod.cdn.arcpublishing.com/resizer/v_rD_nhhCSCGn6ECO6oVAA-7Src=/1024x0/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/NFW6ODVD7X353G2JERH7H3SZ4A.jpg" 
+        alt="Our Store" 
+        className="img-fluid w-100" 
+        style={{ height: '100%', objectFit: 'cover' }} 
+    />
+    
+    {/* Black Overlay */}
+    <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
+        background: 'rgba(0, 0, 0, 0.6)', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        borderRadius: '15px' 
+    }}>
+        {/* Store Title */}
+        <h1 className="text-white fw-bold" 
+            style={{ fontSize: '3rem', fontFamily: 'serif', letterSpacing: '2px' }}>
+            OUR STORE
+        </h1>
+
+        {/* Bookstore Tagline */}
+        <p className="text-white" 
+            style={{ fontSize: '1.5rem', fontStyle: 'italic', marginTop: '10px' }}>
+            A Universe of Stories at Your Fingertips
+        </p>
+    </div>
+</div>
+
+
+         
+
+            <div className="store-wrapper home-wrapper-2 py-5 px-5">
+                <div className="container-xxl">
+                    <div className="row">
+                        {/* Sidebar Filters */}
+                        <div className="col-3">
+                            <div className="filter-card mb-3">
+                                <h5>Shop by Categories</h5>
                                 <ul className="ps-0">
-                                    <li>Watch</li>
-                                    <li>Tv</li>
-                                    <li>Camera</li>
-                                    <li>Laptop</li>
+                                    {categories.map((item, index) => (
+                                        <li key={index} onClick={() => setCategory(item)}>{item}</li>
+                                    ))}
                                 </ul>
                             </div>
-                        </div>
-                        <div className="filter-card mb-3">
-                        <h4 className='filter-title ml-0 pl-0'>Filter By </h4>
-                            <h5 className="sub-title">Availability</h5>
-                            
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    In Stock(1)
-                                </label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input"
-                                id="" 
-                                />
-                                <label htmlFor="" className="form-check-label">
-                                    Out of Stock(0)
-                                </label>
-                            </div>
-                            <h4 className='filter-title ml-0 pl-0'>Price </h4>
-                            <div className='d-flex justify-content-center gap-10'>
-                            <div className="form-floating mb-3">
-                            <input type="email" className="form-control" id="floatingInput" placeholder="From"/>
-                            <label htmlFor="floatingInput"></label>
-                            </div>
-                            <div className="form-floating mb-3">
-                            <input type="email" className="form-control" id="floatingInput" placeholder="To"/>
-                            <label htmlFor="floatingInput"></label>
-                            </div>
-                             </div>
 
-                             <h4 className='filter-title ml-0 pl-0'>Colors</h4>
-                            <div>
-                            <ul className="colors">
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                            </ul>
+                            <div className="filter-card mb-3">
+                                <h5>Shop by Author</h5>
+                                <ul className="ps-0">
+                                    {brands.map((item, index) => (
+                                        <li key={index} onClick={() => setBrand(item)}>{item}</li>
+                                    ))}
+                                </ul>
                             </div>
-                            <h5 className='filter-title ml-0 pl-0'>Size</h5>
-                            <div className='d-flex flex-wrap gap-10 jusify-content-center align-items-center'>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    S(1)
-                                </label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    M(1)
-                                </label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    L(1)
-                                </label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    XL(1)
-                                </label>
-                            </div>
-
-                            </div>
-
-
-
-                            
-                        </div>
-                        <div className="filter-card mb-3">
-                            <h4 className="product-tag ">Product Tag</h4>
+                            <div className="filter-card mb-3">
+                            <h5 className="product-tag ">Product Tag</h5>
                             <div className="d-flex flex-wrap justify-content-center align-items-center gap-5 ">
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            </div>
-                        </div>
-                        <div className="filter-card mb-3">
-                       
-                        </div>
-                    
-                </div>
-                <div className="col-9">
-                    <div className="filter-sort-grid mb-5">
-                        <div className="d-flex align-items-center justify-content-between">
-                        <div className="d-flex align-items-center gap-10">
-                        <p>Sort By</p>
-                        <select className="form-control form-select">
-                            <option value="manual">Featured</option>
-                            <option value="best-selling">Best selling</option>
-                        </select>
-                        </div>
-                        <div className='d-flex align-items-center grid gap-15 '>
-                            <p className="totalproducts mb-0">21 Products</p>
-                            <div className='d-flex gap-10 align-items-center'>
-                                <img onClick={()=>{setgrid(12)}} src="images/gr.svg" alt="" className='d-block img-fluid' />
-                                <img onClick={()=>{setgrid(6)}} src="images/gr2.svg" alt="" className='d-block img-fluid' />
-                                <img onClick={()=>{setgrid(4)}} src="images/gr3.svg" alt="" className='d-block img-fluid' />
-                                <img onClick={()=>{setgrid(3)}} src="images/gr4.svg" alt="" className='d-block img-fluid' />
+                            {tags && tags.map((item, index) => (
+                                         <span key={index} onClick={()=> setTag(item)} className='badge bg-light text-secondary py-2 px-3 mx-2'>{item}</span>
+                                    ))}
+
                             </div>
                         </div>
 
+                            <div className="filter-card mb-3">
+                                <h5>Filter By</h5>
+                
+
+                                <h4 className='filter-title'>Price</h4>
+                                <div className='d-flex justify-content-center gap-10 filter-title'>
+                                    <input type="number" className="form-control" placeholder="From" onChange={(e) => setMinPrice(e.target.value)} />
+                                    <input type="number" className="form-control" placeholder="To" onChange={(e) => setMaxPrice(e.target.value)} />
+                                </div>
+                            </div>
+                            <div>
+                            <button
+  className="text-white border-0 p-2 rounded" 
+  style={{
+    color: "black",
+    backgroundColor: "red",
+    borderRadius: "5px",  // Rounded corners
+  }}
+  onClick={() => window.location.reload()} // Correct reload function
+>
+  Remove Filters
+</button>
+
+                            </div>
                         </div>
-                        
 
-                    
-                    
-                    </div>
-                    <div className="product-list pb-5 d-flex gap-10
-                    mb-5 flex-wrap ">
-                        <Productcart data={productState} grid={grid}/>
-                 
-                    </div>
+                        {/* Product List */}
+                        <div className="col-9">
+                            <div className="filter-sort-grid mb-5">
+                                <div className="d-flex align-items-center justify-content-between">
+                                    <div className="d-flex align-items-center gap-10">
+                                        <p>Sort By</p>
+                                        <select className="form-control form-select" onChange={(e) => setSort(e.target.value)}>
+                                            <option value="title">Alphabetically, A-Z</option>
+                                            <option value="-title">Alphabetically, Z-A</option>
+                                            <option value="price">Price, Low to High</option>
+                                            <option value="-price">Price, High to Low</option>
+                                            <option value="createdAt">Old to New</option>
+                                            <option value="-createdAt">New to Old</option>
+                                        </select>
+                                    </div>
+                                    <div className='d-flex align-items-center grid gap-15'>
+                                        <p className="totalproducts mb-0">{productState.length}  Products</p>
+                                        <div className='d-flex gap-10 align-items-center'>
+                                            <img onClick={() => setGrid(12)} src="images/gr.svg" alt="Grid 12" className='d-block img-fluid' />
+                                            <img onClick={() => setGrid(6)} src="images/gr2.svg" alt="Grid 6" className='d-block img-fluid' />
+                                            <img onClick={() => setGrid(4)} src="images/gr3.svg" alt="Grid 4" className='d-block img-fluid' />
+                                            <img onClick={() => setGrid(3)} src="images/gr4.svg" alt="Grid 3" className='d-block img-fluid' />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div className="product-list pb-5 d-flex gap-10 mb-5 flex-wrap">
+                                <Productcart data={productState} grid={grid} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-      </div>
-    </>
-  )
-}
+        </>
+    );
+};
 
-export default OurStore
+export default OurStore;

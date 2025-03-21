@@ -28,7 +28,7 @@ const wishlist = () => {
     <Meta title={"Wishlist"}/>
     <Breadcrumb title="Wishlist"/>
     <div>
-      <div className="wishlist-wrapper home-wrapper-2 py-5">
+      <div className="wishlist-wrapper home-wrapper-2 py-5 px-3">
          <div className="container-xxl">
              <div className="row">
               {
@@ -43,7 +43,7 @@ const wishlist = () => {
                          src="images/cross.svg" alt="cross" className="position-absolute img-fluid cross" />
 
                         <div className="product-card-image">
-                        <img src={item?.images[0].url ? item?.images[0].url : "images/watch.jpg"} alt="watch"
+                        <img src={item?.images[0]?.url ? item?.images[0].url : "images/watch.jpg"} alt="watch"
                         className='img-fluid w-100 d-block mx-auto'
                         width={100}
                         />

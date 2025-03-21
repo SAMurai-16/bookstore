@@ -6,6 +6,7 @@ import BlogCard from './BlogCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getallProducts } from '../features/product/productSlice';
 import { getallBlogs } from '../features/blog/blogSlice';
+import { useLocation } from 'react-router-dom';
 
 
 
@@ -15,138 +16,81 @@ const Blogs = () => {
    
     
     const [grid, setgrid] = useState(4)
+    const [categories, setCategories] = useState([]);
+    const [category, setCategory] = useState(null);
+    const location = useLocation()
+
+
+    useEffect(()=>{
+        const newCategories = [...new Set(blogState.map(item => item.category))];
+        setCategories(newCategories);
+
+    },[blogState,location.pathname])
 
     useEffect(() => {
-        dispatch(getallBlogs()); // Runs only once when component mounts
-    }, []);
+        dispatch(getallBlogs({category})); // Runs only once when component mounts
+    }, [dispatch,category,location.pathname]);
     
     
   return (
     
     
     <>
-    <Helmet>
-        <meta title="Our Store"/>
-                <meta charSet="utf-8" />
-                <title>Our Store</title>
-              
-            </Helmet>
-      <Breadcrumb title= "Our Store"/>
-      <div className="store-wrapper home-wrapper-2 py-5">
+          <div className="store-banner text-center m-2 position-relative" 
+    style={{ height: 300, overflow: 'hidden', borderRadius: '15px' }}>
+    
+    {/* Background Image */}
+    <img 
+        src="https://bostonglobe-prod.cdn.arcpublishing.com/resizer/v_rD_nhhCSCGn6ECO6oVAA-7Src=/1024x0/cloudfront-us-east-1.images.arcpublishing.com/bostonglobe/NFW6ODVD7X353G2JERH7H3SZ4A.jpg" 
+        alt="Our Store" 
+        className="img-fluid w-100" 
+        style={{ height: '100%', objectFit: 'cover' }} 
+    />
+    
+    {/* Black Overlay */}
+    <div style={{ 
+        position: 'absolute', 
+        top: 0, 
+        left: 0, 
+        width: '100%', 
+        height: '100%', 
+        background: 'rgba(0, 0, 0, 0.6)', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        borderRadius: '15px' 
+    }}>
+        {/* Store Title */}
+        <h1 className="text-white fw-bold" 
+            style={{ fontSize: '3rem', fontFamily: 'serif', letterSpacing: '2px' }}>
+            BLOGS
+        </h1>
+
+        {/* Bookstore Tagline */}
+        <p className="text-white" 
+            style={{ fontSize: '1.5rem', fontStyle: 'italic', marginTop: '10px' }}>
+            A Universe of Stories at Your Fingertips
+        </p>
+    </div>
+</div>
+      <div className="store-wrapper home-wrapper-2 py-5 px-3">
         <div className="conatainer-xl">
             <div className="row">
                 <div className="col-3">
                     
                         <div className="filter-card mb-3">
-                            <h4 className='filter-title pl-0 ml-0'>Shop by Categories </h4>
+                            <h5 className='pl-0 ml-0'>Search by Categories </h5>
                             <div>
                                 <ul className="ps-0">
-                                    <li>Watch</li>
-                                    <li>Tv</li>
-                                    <li>Camera</li>
-                                    <li>Laptop</li>
+                                {categories.map((item, index) => (
+                                        <li key={index} onClick={() => setCategory(item)}>{item}</li>
+                                    ))}
                                 </ul>
                             </div>
                         </div>
-                        <div className="filter-card mb-3">
-                        <h4 className='filter-title ml-0 pl-0'>Filter By </h4>
-                            <h5 className="sub-title">Availability</h5>
-                            
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    In Stock(1)
-                                </label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input"
-                                id="" 
-                                />
-                                <label htmlFor="" className="form-check-label">
-                                    Out of Stock(0)
-                                </label>
-                            </div>
-                            <h4 className='filter-title ml-0 pl-0'>Price </h4>
-                            <div className='d-flex justify-content-center gap-10'>
-                            <div className="form-floating mb-3">
-                            <input type="email" className="form-control" id="floatingInput" placeholder="From"/>
-                            <label htmlFor="floatingInput"></label>
-                            </div>
-                            <div className="form-floating mb-3">
-                            <input type="email" className="form-control" id="floatingInput" placeholder="To"/>
-                            <label htmlFor="floatingInput"></label>
-                            </div>
-                             </div>
-
-                             <h4 className='filter-title ml-0 pl-0'>Colors</h4>
-                            <div>
-                            <ul className="colors">
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                                <li></li>
-                            </ul>
-                            </div>
-                            <h5 className='filter-title ml-0 pl-0'>Size</h5>
-                            <div className='d-flex flex-wrap gap-10 jusify-content-center align-items-center'>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    S(1)
-                                </label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    M(1)
-                                </label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    L(1)
-                                </label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox" className="form-check-input" />
-                                <label htmlFor="" className="form-check-label">
-                                    XL(1)
-                                </label>
-                            </div>
-
-                            </div>
-
-
-
-                            
-                        </div>
-                        <div className="filter-card mb-3">
-                            <h4 className="product-tag ">Product Tag</h4>
-                            <div className="d-flex flex-wrap justify-content-center align-items-center gap-5 ">
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            <span className='badge bg-light text-secondary py-2 px-3'>Headphones</span>
-                            </div>
-                        </div>
-                        <div className="filter-card mb-3">
-                       
-                        </div>
+                     
+                   
                     
                 </div>
                 <div className="col-9">

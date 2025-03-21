@@ -34,15 +34,15 @@ var productSchema = new mongoose.Schema({
         type:Number,
         required:true
     },
-    sold:{
-        type:Number,
-        default:0,
-    },
+    sold: [{
+        type: mongoose.Schema.Types.ObjectId, // ✅ Stores IDs of users/orders/products
+        ref: "User", // ✅ Change "Order" if you want to track users or products
+    }],
     images:[{
         imgId:String,
         url:String,
     }],
-    color:{
+    tag:{
         type:String,
     },
     ratings:[{

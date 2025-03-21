@@ -24,6 +24,10 @@ const Cart = () => {
 
     const cartState = useSelector((state) => state?.auth?.cart);
     // const totalPrice = cartState?.reduce((acc, item) => acc + (item?.ProductId?.price || 0), 0);
+
+    const getTotalPrice = () => {
+        return cartState?.reduce((total, item) => total + item?.ProductId?.price || 0 , 0);
+      };
    
     
  
@@ -39,7 +43,7 @@ const Cart = () => {
 
             <Breadcrumb title="Cart" />
 
-            <section className="cart-wrapper home-wrapper-2 py-5">
+            <section className="cart-wrapper home-wrapper-2 py-5 px-3">
                 <div className="container-xxl">
                     <div className="row">
                         <div className="col-12">
@@ -56,7 +60,7 @@ const Cart = () => {
                                 <div className="col-12" key={index}>
                                     <div className="cart-data d-flex justify-content-between align-items-center py-3 border-bottom">
                                         {/* Product Image & Title */}
-                                        <div className="cart-col-1 d-flex align-items-center gap-3">
+                                        <div className="cart-col-1 d-flex align-items-center gap-15">
                                             <div className="cart-image">
                                                 <img
                                                     src={item?.ProductId?.images?.[0]?.url || "https://via.placeholder.com/100"}
@@ -112,7 +116,7 @@ const Cart = () => {
                                 Continue Shopping
                             </Link>
                             <div className="text-end">
-                                <h4>Subtotal: Rs 1000</h4>
+                                <h4>Subtotal: Rs {Array.isArray(cartState) ? getTotalPrice() : "Loading..."}</h4>
                                 <p>Taxes and shipping calculated at checkout</p>
                                 <Link to="/checkout" className="button">
                                     Checkout

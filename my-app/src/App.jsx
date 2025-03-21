@@ -17,6 +17,13 @@ import SingleProduct from "./pages/SingleProduct"
 import Cart from "./pages/Cart"
 import Blogs from "./pages/Blogs"
 import Checkout from "./pages/checkout"
+import SingleBlog from "./pages/singleBlog"
+import Review from "./pages/review"
+import Orders from "./pages/Orders"
+import Profile from "./pages/Profile"
+import ResetPassword from "./pages/resetPassword"
+import { PrivateRoutes } from "./routing/protectedRoutes"
+import { OpenRoutes } from "./routing/openRoutes"
 
 const App = () => {
   return (
@@ -28,15 +35,21 @@ const App = () => {
          <Route path="about" element={<About/>}/>
          <Route path="contact" element={<Contact/>}/>
          <Route path="product" element={<OurStore/>}/>
-         <Route path="cart" element={<Cart/>}/>
+         <Route path="cart" element={<PrivateRoutes><Cart/></PrivateRoutes>}/>
          <Route path="product/:id" element={<SingleProduct/>}/>
+         <Route path="blog/:id" element={<SingleBlog/>}/>
          <Route path="compare" element={<CompareProducts/>}/>
-         <Route path="wishlist" element={<Wishlist/>}/>
+         <Route path="wishlist" element={<PrivateRoutes><Wishlist/></PrivateRoutes>}/>
          <Route path="login" element={<Login/>}/>
-         <Route path="blogs" element={<Blogs/>}/>
-         <Route path="checkout" element={<Checkout/>}/>
+         <Route path="profile" element={<Profile/>}/>
+         <Route path="orders" element={<Orders/>}/>
+         <Route path="blog" element={<Blogs/>}/>
+         <Route path="product/:id/review" element={<Review/>}/>
+         <Route path="checkout" element={<PrivateRoutes><Checkout/></PrivateRoutes>}/>
          <Route path="forgot-password" element={<ForgotPaswword/>}/>
+         <Route path="reset-password/:token" element={<ResetPassword/>}/>
          <Route path="signup" element={<SignUp/>}/>
+         
 
 
 

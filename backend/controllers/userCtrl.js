@@ -7,11 +7,13 @@ const Coupon  = require("../models/couponModel")
 const Order = require("../models/orderModel")
 const uniqid = require("uniqid")
 const asynchandler = require("express-async-handler")
-const {GenerateRefreshToken} = require("../config/refreshtoken")
+const {GenerateRefreshToken, createPasswordResetToken} = require("../config/refreshtoken")
 const jwt = require("jsonwebtoken");
 const validateMongoDbId = require("../utils/validatemongodbId");
 const crypto = require('crypto');
 const { log } = require("util");
+const sendEmail = require("../utils/emailService")
+
 
 
 
@@ -145,7 +147,7 @@ const updateUser = asynchandler(async(req,res)=>{
     validateMongoDbId(_id)
 
     try{
-    const updateUser = await User.findByIdAndUpdate(id,{
+    const updateUser = await User.findByIdAndUpdate(_id,{
         firstname: req?.body?.firstname,
         lastname: req?.body?.lastname,
         email: req?.body?.email,
@@ -229,15 +231,19 @@ const forgotPasswordToken = asynchandler(async(req,res)=>{
     const user = await User.findOne({email})
     if(!user)throw new Error("user not found with this email")
     try{
-const token = await user.createPasswordResetToken()
+const token = await createPasswordResetToken(user?._id)
+user.passwordResetToken = token;
 await user.save()
-const resetURL = `hi, PLease follow this link to reset your Password. This link is valid till 10 minutes from now. <a href='http://localhost:5000/api/user/reset-password/${token}>Click Here</>`
+const resetURL = `hi, PLease follow this link to reset your Password. This link is valid till 10 minutes from now. <a href='http://localhost:5173/reset-password/${token}>Click Here</>`
+
+
+
 
 const data = {
     to:email,
     text:"hey user",
     subject:"Forgot Password Link",
-    htm: resetURL,
+    html: resetURL,
 
 }
 sendEmail(data)
@@ -252,11 +258,13 @@ catch(error){
 
 const resetpassword = asynchandler(async (req,res) =>{
     const {password } = req.body;
-    const {token } =  req.params;
-    const hashedtoken  = crypto.createHash('sha256').update(token).digest("hex");
+    const {token} =  req.params;
+    
+    
+ 
     const user = await User.findOne({
-        passwordResetToken : hashedtoken,
-        passwordResetExpires: { $gt: Date.now()},
+        passwordResetToken : token,
+        
     });
     if (!user) throw new Error("Token Expired, PLease try again Later");
     user.password = password;
@@ -384,8 +392,7 @@ const deletefromcart  = asynchandler(async(req,res)=>{
 const emptyCart   = asynchandler(async(req,res)=>{
     const{_id} = req.user;
     try{
-        const user  = await User.findById(_id);
-        const cart  = await Cart.findOneAndDelete({orderby:user._id})
+        const cart  = await Cart.findOneAndDelete({userId:_id})
         res.json(cart)
     }
     catch(error){
@@ -524,11 +531,20 @@ const createOrder = asynchandler(async(req,res)=>{
     const{orderItems,totalPrice, totalPriceAfterDiscount,paymentInfo } = req.body;
     const{_id} = req.user;
     try{
-       const order = await Order.create({orderItems,totalPrice, totalPriceAfterDiscount,paymentInfo,user:_id
+       const order = await Order.create({orderItems,totalPrice, totalPriceAfterDiscount,paymentInfo,user:_id  })
 
-       })
+       await Promise.all(orderItems.map(async (item) => {
+        await Product.findByIdAndUpdate(
+            item.product, // ✅ Access individual product ID
+            { $push: { sold: _id } }, // ✅ Push user ID to sold array
+            { new: true }
+        );
+    }))
+
+     
        res.json({
         order,
+        
         success:true,
     })
     }
@@ -557,20 +573,7 @@ const getOrders = asynchandler(async(req,res)=>{
     }
 })
 
-const getallOrders = asynchandler(async(req,res)=>{
-    
-    try{
-        const userorders = await Order.find()
-        .populate("products.product")
-        .populate("orderby")
-        .exec()
-        res.json(userorders)
-    }
-    catch(error){
 
-        throw new Error(error);
-    }
-})
 
 const updateorderstatus = asynchandler(async(req,res)=>{
     const{id} = req.params;
@@ -591,6 +594,23 @@ const updateorderstatus = asynchandler(async(req,res)=>{
 
         throw new Error(error);
     }
+})
+
+
+const getallOrders = asynchandler(async(req,res)=>{
+    const{_id}  = req.user;
+    console.log(_id);
+    
+    try{
+        const orders = await Order.find({user:_id}).populate("user").populate("orderItems.product")
+
+        res.json(orders)
+
+    }
+    catch(error){
+        throw new Error(error)
+    }
+
 })
 
 
@@ -636,7 +656,8 @@ module.exports = { CreateUser,
     createOrder,
     createCoupon,
     getallCoupons,
-    applyCoupon
+    applyCoupon,
+    getallOrders
 
     };
  

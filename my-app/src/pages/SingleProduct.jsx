@@ -1,147 +1,126 @@
-import React, { useEffect, useState } from 'react'
-import Breadcrumb from './breadcrumb'
-import Meta from '../components/meta'
-import Productcart from './Productcart'
-import ImageZoom from "react-image-zooom";
+import React, { useEffect, useState, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProduct} from '../features/product/productSlice';
+import Breadcrumb from './breadcrumb';
+import Meta from '../components/meta';
+import Productcart from './Productcart';
+import ImageZoom from 'react-image-zooom';
+import { getProduct } from '../features/product/productSlice';
 import { addProdToCart, getUserCart } from '../features/user/userSlice';
 
-
-
 const SingleProduct = () => {
-    const [AlreadyAdded ,setAlreadyAdded ]= useState(false);
-    const navigate = useNavigate()
-
-    
-    const [state,setstate]= useState(0);
-
-    const location = useLocation();
-    const getProdId = location.pathname.split("/")[2]
-
-
-
-    
-   
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    useEffect(()=>{
+    const location = useLocation();
+
+     const ratingState = useSelector(state=>state?.prod?.singleproduct?.ratings)
+    const getProdId = useMemo(() => location.pathname.split('/')[2], [location]);
+    
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    
+    useEffect(() => {
         dispatch(getProduct(getProdId));
-        dispatch(getUserCart())
-    },[])
-    const productstate = useSelector(state=>state.prod.product)
-    const images1 =  productstate?.images
-    const cartstate = useSelector(state=>state.auth.cart)
-    
-    
+        dispatch(getUserCart());
+       
+    }, [dispatch, getProdId]);
 
-    const addProd = ()=>{
-        dispatch(addProdToCart({ProductId:productstate?._id,price:productstate?.price,quantity:1})   );
-        setTimeout(()=>
-        {
-            navigate("/cart");
-        },1000)
-        
+    const Product = useSelector(state => state?.prod?.singleproduct);
+    const getUserId = useSelector(state=>state?.auth?.user?._id)
+    const cart = useSelector(state => state?.auth?.cart);
+    const images = Product?.images || [];
+    const ratings = Product?.ratings|| [];
+    const[allowed,setAllowed] = useState(false)
 
-    }
-
-    useEffect(()=>{
-        for(let index = 0; index< cartstate?.length ; index++){
-            if (getProdId === cartstate[index]?.ProductId?._id){
-                setAlreadyAdded(true)
-
-
-            }
-        }
-    })
+    const isAlreadyAdded = useMemo(() => 
+        Array.isArray(cart) && cart.some(item => item?.ProductId?._id === getProdId), 
+    [cart, getProdId]);
     
-    
-    
-  
+    const addToCart = () => {
+        dispatch(addProdToCart({ ProductId: Product?._id, price: Product?.price, quantity: 1 }));
+        setTimeout(() => navigate('/cart'), 1000);
+    };
+
    
-  return (
-    <>
-    <Meta title={"Product Name"}/>
-    <Breadcrumb title="Product Name"/>
-    <div className="main-product-wrapper py-5 home-wrapper-2">
-        <div className="container-xxl">
-            <div className="row">
-                <div className="col-6">
-                <div className="main-product-image">  
-                    <div>
-                         <ImageZoom src={"https://wallpaperaccess.com/full/3046105.jpg"} alt="A image to apply the ImageZoom plugin" zoom="200" 
-                         />
-                    </div>
-                </div>
-                <div className=" d-flex other-product-images flex-wrap gap-15">
-                   {images1?.map((item,index)=>{
-                    return(
-
-                        <div key={index}>
-                        <img onClick={()=>{setstate(index);
-                        }} src={item?.url ? item?.url : "https://wallpaperaccess.com/full/3046105.jpg"}
-                        className='img-fluid' alt="" />
-                    </div>
-
-                    )
-                }
-
-                )}
-
+    
+    const existingReview = ratingState?.find(item => item?.postedby?._id === getUserId);
+    
+    return (
+        <>
+            <Meta title={Product?.title || 'Product Name'} />
+           
             
-
-                </div>
-                </div>
-                <div className="col-6">
-                    <div className="main-product-details">
-                        <div className="title">
-                            <h3>{productstate?.title}</h3>
+            <div className="main-product-wrapper py-5 home-wrapper-2">
+                <div className="container-xxl">
+                    <div className="row">
+                        {/* Left Column - Product Images */}
+                        <div className="col-md-6">
+                            <div className="main-product-image">
+                                <ImageZoom src={images[selectedImageIndex]?.url || "https://wallpaperaccess.com/full/3046105.jpg"} 
+                                           alt="Product Image" zoom="200" />
+                            </div>
+                            <div className="d-flex other-product-images flex-wrap gap-15 mt-3">
+                                {images.map((item, index) => (
+                                    <img key={index} 
+                                         onClick={() => setSelectedImageIndex(index)}
+                                         src={item?.url || "https://wallpaperaccess.com/full/3046105.jpg"}
+                                         className='img-fluid thumbnail' 
+                                         alt="Product Thumbnail" />
+                                ))}
+                            </div>
                         </div>
-                        <div className="price-rating">
-                            <p>Price:Rs {productstate?.price}</p>
-                        </div>
-                        <div className="details py-5">
-                            <div className="d-flex gap-15">
-                                <p className=''>Quantity</p>
-                                <input type="number"
-                                min={1}
-                                max={9} />
-                               <div className="d-flex justify-content-center gap-30">
-                            <button className="button"
-
-                            
-                            onClick={()=> {AlreadyAdded ? navigate('/cart'): 
-                                addProd()
-                             }}>
-                                {AlreadyAdded ? " Go to Cart" : "Add to Cart" }
-                                </button>
-                            <Link to="/signup"className="button signup">Buy Now</Link>
-                        </div>
+                        
+                        {/* Right Column - Product Details */}
+                        <div className="col-md-6">
+                            <div className="main-product-details">
+                                <h3 className="product-title">{Product?.title}</h3>
+                                <p className="product-price">Price: ₹{Product?.price}</p>
+                                
+                                <div>
+                                    <p> <span className="text-bold">Description</span> : {Product?.description}</p>
+                                </div>
+                                
+                                <div className="d-flex gap-3">
+                                    <button className="button" onClick={() => isAlreadyAdded ? navigate('/cart') : addToCart()}>
+                                        {isAlreadyAdded ? "Go to Cart" : "Add to Cart"}
+                                    </button>
+                                    <Link to="/signup" className="button signup">Buy Now</Link>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    {/* Reviews Section */}
+                    <div className="reviews-container mt-5 p-4 border rounded" style={{ backgroundColor: "#f9f9f9" }}>
+                        <h4 className="mb-3">Customer Reviews</h4>
+                        {
+                            Product?.sold.map((item,index)=>{
+                                if(item?.includes(getUserId)){ 
+                                    return <Link to={`review`} key={index}>{existingReview ? "Edit Review" : "Add Review"}</Link>
+                                }
+                                    return null
+                               
+                            })
+                        }
+                        
+                        {ratings.length > 0 ? (
+                            ratings.map((item, index) => (
+                                <div key={index} className="review mb-3 p-3 border rounded">
+                                    <strong>{item?.postedby?.firstname} {item?.postedby?.lastname}</strong>
+                                    <p >Rating:{item?.star}</p>
+                                    <p>{item?.comment}</p>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No reviews yet. Be the first to review!</p>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <section className="featured-wrapper py-5 home-wrapper-2">
-        <div className="container-xxl">
-            <div className="row">
-                <div className="col-12">
-                    <h3 className='section-heading mb-50'>
-                        Featured Collection
+            
+            
+            
+        </>
+    );
+};
 
-                    </h3>
-                </div>
-              <Productcart/>
-              <Productcart/>
-              <Productcart/>
-              <Productcart/>
-            </div>
-        </div>
-    </section>
-    </>
-  )
-}
-
-export default SingleProduct
+export default SingleProduct;

@@ -1,6 +1,6 @@
 import React from 'react'
 import CustomInput from './CustomInput'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {useFormik} from "formik"
 import * as yup from 'yup';
 import {useDispatch} from "react-redux"
@@ -18,6 +18,7 @@ let signUpSchema = yup.object({
 
 
 const SignUp = () => {
+  const navigate= useNavigate()
   const dispatch = useDispatch();
 
   const formik = useFormik({
@@ -32,6 +33,7 @@ const SignUp = () => {
     validationSchema:signUpSchema, 
     onSubmit: (values) => {
      dispatch(registerUser(values))
+     navigate("/login")
     },
   });
   return (

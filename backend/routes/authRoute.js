@@ -50,6 +50,7 @@ router.put('/reset-password/:token', resetpassword);
 router.get('/refresh', handleRefreshToken);
 router.get("/logout", logout);
 router.get('/coupon', getallCoupons);
+router.get('/order',authMiddleware, getallOrders);
 
 // User-specific actions
 router.get("/cart", authMiddleware, getUserCart);
@@ -63,7 +64,7 @@ router.delete("/cart/:id", authMiddleware,deletefromcart)
 
 // Dynamic routes (place last)
 router.get("/:id", authMiddleware, getaUser);
-router.put("/:id", updateUser);
+router.put("/",authMiddleware, updateUser);
 router.delete("/:id", deleteaUser);
 
 

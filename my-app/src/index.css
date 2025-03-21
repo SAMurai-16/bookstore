@@ -11,3 +11,164 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.category-card {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.category-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.category-card:hover .category-img {
+  transform: scale(1.05);
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: background 0.3s ease-in-out;
+}
+
+.category-card:hover .overlay {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.category-text {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  z-index: 2;
+}
+.hero-wrapper {
+  padding: 40px 0;
+}
+
+.hero-banner {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.hero-img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  transition: background 0.3s ease-in-out;
+}
+
+
+
+.hero-content {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+}
+
+.hero-content h4 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.hero-content h5 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.hero-content p {
+  font-size: 16px;
+}
+
+.hero-content .button {
+  background: #ff6f61;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s ease-in-out;
+}
+
+.hero-content .button:hover {
+  background: #e65c50;
+}
+
+.small-banner {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.small-banner-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.small-banner-content {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Adjust spacing between small banners */
+.col-md-6.d-flex.flex-wrap .col-6 {
+  padding: 5px;
+}
+
+/* Ensure the overall layout is balanced */
+@media (max-width: 768px) {
+  .hero-img {
+    height: 250px;
+  }
+
+  .small-banner-img {
+    height: 120px;
+    width: 100%;
+  } 
+
+  .hero-content h4 {
+    font-size: 18px;
+  }
+
+  .hero-content h5 {
+    font-size: 16px;
+  }
+
+  .hero-content p {
+    font-size: 14px;
+  }
+}

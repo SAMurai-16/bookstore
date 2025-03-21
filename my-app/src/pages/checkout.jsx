@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "./breadcrumb";
 import Meta from "../components/meta";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
 import { config } from "../utils/axiosConfig";
-import { getUserCart } from "../features/user/userSlice";
+import { createOrder, EmptyCart, getUserCart } from "../features/user/userSlice";
 import { getAllCoupons } from "../features/user/userSlice";
 
 const Checkout = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch();
   useEffect(
     ()=>{
@@ -33,7 +34,8 @@ const Checkout = () => {
   name:null
   });
   const [Discount,setDiscount] = useState(0)
-  const [shippingInfo,setShippingInfo] = useState({razorpayPaymentId:"", razorpayOrderId:""})
+  const [paymentInfo,setPaymentInfo] = useState({razorpayPaymentId:"", razorpayOrderId:""})
+  const [cartProductState,setCartProductState] = useState([])
 
 
 
@@ -73,9 +75,6 @@ const Checkout = () => {
   
   
 
-  const handleChange = (e) => {
-    setShippingInfo({ ...shippingInfo, [e.target.name]: e.target.value });
-  };
 
  
 
@@ -95,6 +94,20 @@ const Checkout = () => {
 
 }
 
+useEffect(()=>{
+  let items =[];
+  for (let index = 0; index < cartState?.length; index++) {
+    items.push({product:cartState[index].ProductId._id,price:cartState[index].price})
+    
+  }
+   setCartProductState(items)
+},[])
+console.log(cartProductState);
+
+
+const totalPriceAfterDiscount = getTotalPrice() - Discount
+
+
 
 const checkOutHandler = async () =>{
   
@@ -106,7 +119,7 @@ const checkOutHandler = async () =>{
   }
   
 
-  const result = await axios.post("http://localhost:5000/api/user/order/checkout","",config)
+  const result = await axios.post("http://localhost:5000/api/user/order/checkout",{amount:totalPriceAfterDiscount},config)
   if(!res){
     alert("something went wrong")
     return;
@@ -115,6 +128,9 @@ const checkOutHandler = async () =>{
 
   const { amount, id, currency } = result.data.order;
   console.log(id);
+
+
+  
   
 
   
@@ -131,34 +147,40 @@ const checkOutHandler = async () =>{
     handler: async (response) => {
       try {
         console.log("Razorpay Response:", response);
+    
+        // Temporary object to store payment info
+        const paymentDetails = {
+          razorpayOrderId: response.razorpay_order_id,
+          razorpayPaymentId: response.razorpay_payment_id,
+        };
+    
+        // Send payment verification request
         await fetch("http://localhost:5000/api/user/order/paymentVerification", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             ...config.headers,
           },
-
-
-        
-          body: JSON.stringify({
-            razorpay_order_id: response.razorpay_order_id,
-            razorpay_payment_id: response.razorpay_payment_id,
-          
-          }),
+          body: JSON.stringify(paymentDetails),
         });
-        // Add onPaymentSuccessfull function here
+    
         alert("Payment successful!");
-
-
-        setPaymentInfo({
-          razorpayOrderId: response.razorpay_order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-
-        })
+    
+        // Now dispatch createOrder with updated payment details
+        dispatch(createOrder({
+          totalPrice: getTotalPrice(),
+          totalPriceAfterDiscount: totalPriceAfterDiscount,
+          paymentInfo: paymentDetails,  // Use the temporary object
+          orderItems: cartProductState
+        }));
+        navigate("/");
+        dispatch(EmptyCart())
+        
+    
       } catch (err) {
-        // Add onPaymentUnSuccessfull function here
         alert("Payment failed: " + err.message);
       }
+    
     },
     prefill: {
       name: "John Doe", // add customer details

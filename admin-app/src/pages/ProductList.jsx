@@ -25,8 +25,8 @@ const columns = [
       dataIndex: 'category',
     },
     {
-      title: 'Color',
-      dataIndex: 'color',
+      title: 'Tag',
+      dataIndex: 'tag',
     },
     {
       title: 'Price',
@@ -77,8 +77,9 @@ const dataSource = Array.from({
   title: state[i].title,
   brand: state[i].brand,
   category: state[i].category,
-  color: state[i].color,
+  tag : state[i].tag,
   price: `$ ${state[i].price}`,
+
   action:(
     <>
     <Link to={`/admin/Product/${state[i]._id}`}><AiFillEdit /></Link>

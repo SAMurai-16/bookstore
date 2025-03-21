@@ -1,13 +1,7 @@
 import axios from "axios"
 import { base_url } from "../../utils/base_url"
+import {config} from "../../utils/axiosconfig"
 
-const getTokenfromLocalStorage = localStorage.getItem("user")? JSON.parse(localStorage.getItem('user')):null
-
-const config =  {
-    headers:{
-        Authorization:`Bearer ${getTokenfromLocalStorage.token}`
-    }
-}
 
 
 
