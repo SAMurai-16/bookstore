@@ -1,6 +1,6 @@
 const brand = require("../models/brandModel.js")
 const asynchandler = require("express-async-handler")
-const validateMongoDbId = require("../utils/validatemongodbId.js")
+
 
 
 const createbrand  = asynchandler(async(req,res)=>{
