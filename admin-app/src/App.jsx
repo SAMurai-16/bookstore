@@ -19,7 +19,6 @@ import AddProduct from "./pages/AddProduct";
 import AddBrand from "./pages/AddBrand";
 import AddCategory from "./pages/AddCategory";
 import AddBlog from "./pages/AddBlog";
-import checkout from "../../my-app/src/pages/checkout"
 import AddBlogcategory from "./pages/AddBlogcatgory";
 
 
@@ -48,7 +47,7 @@ const App = () => {
         <Route path="Brand" element={<AddBrand/>}/>
         <Route path="Brand/:id" element={<AddBrand/>}/>
         <Route path="category/:id" element={<AddCategory/>}/>
-        <Route path="checkout" element={<checkout/>}/>
+    
         <Route path="category" element={<AddCategory/>}/>
         <Route path="Blog" element={<AddBlog/>}/>
         <Route path="Blog-Category" element={<AddBlogcategory/>}/>
