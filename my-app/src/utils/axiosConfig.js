@@ -1,4 +1,4 @@
-export const base_url = "http://localhost:5000/api/";
+export const base_url = "https://bookstore-q7d5.onrender.com//api/";
 
 const getTokenfromLocalStorage = localStorage.getItem("customer") 
     ? JSON.parse(localStorage.getItem("customer")) 
