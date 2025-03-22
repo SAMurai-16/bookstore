@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     open: true,
+    historyApiFallback: true 
   },
   test: {
     globals: true,
@@ -16,9 +17,7 @@ export default defineConfig({
   build: {
     outDir: 'dist'
   },
-  server: {
-    historyApiFallback: true // Fixes refresh issue in dev
-  },
+
   preview: {
     historyApiFallback: true
   }
