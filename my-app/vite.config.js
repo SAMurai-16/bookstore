@@ -13,4 +13,13 @@ export default defineConfig({
     setupFiles: "src/setupTests",
     mockReset: true,
   },
+  build: {
+    outDir: 'dist'
+  },
+  server: {
+    historyApiFallback: true // Fixes refresh issue in dev
+  },
+  preview: {
+    historyApiFallback: true
+  }
 })
