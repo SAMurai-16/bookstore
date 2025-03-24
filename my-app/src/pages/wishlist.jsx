@@ -4,6 +4,9 @@ import Meta from '../components/meta'
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserWishlist } from '../features/user/userSlice';
 import { addtoWishlist } from '../features/product/productSlice';
+import { Helmet } from "react-helmet";
+
+
 
 const wishlist = () => {
   const dispatch = useDispatch();
@@ -25,8 +28,12 @@ const wishlist = () => {
 
   return (
     <>
-    <Meta title={"Wishlist"}/>
-    <Breadcrumb title="Wishlist"/>
+        <Helmet>
+                        <Meta title="Wishlist" />
+                        <Meta charSet="utf-8" />
+                        <title>Wishlist</title>
+                    </Helmet>
+ 
     <div>
       <div className="wishlist-wrapper home-wrapper-2 py-5 px-3">
          <div className="container-xxl">

@@ -8,6 +8,9 @@ import FeaturedCard from "./FeaturedCard"
 import BlogCard from './blogCardHome';
 import { getallBlogs } from '../features/blog/blogSlice';
 import { getUserWishlist } from '../features/user/userSlice';
+import { Helmet } from "react-helmet";
+import Breadcrumb from "./breadcrumb";
+import Meta from "../components/meta";
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -29,6 +32,11 @@ const Home = () => {
 
   return (
     <>
+    <Helmet>
+                    <Meta title="Home" />
+                    <Meta charSet="utf-8" />
+                    <title>Home</title>
+    </Helmet>
       {/* Hero Section */}
       <section className="hero-wrapper py-5 px-5">
         <div className="container-xxl">

@@ -5,6 +5,9 @@ import {useFormik} from "formik"
 import * as yup from 'yup';
 import {useDispatch} from "react-redux"
 import { registerUser } from '../features/user/userSlice';
+import { Helmet } from "react-helmet";
+import Breadcrumb from "./breadcrumb";
+import Meta from "../components/meta";
 
 
 let signUpSchema = yup.object({
@@ -40,6 +43,12 @@ const SignUp = () => {
 
     
     <>
+      <Helmet>
+                        <Meta title="Sign Up" />
+                        <Meta charSet="utf-8" />
+                        <title>Sign Up</title>
+        </Helmet>
+
     <div className="signup-wrapper py-5 home-wrapper-2">
       <div className="container-xxl">
         <div className="row">

@@ -4,6 +4,9 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUser } from '../features/user/userSlice';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from "react-helmet";
+import Breadcrumb from "./breadcrumb";
+import Meta from "../components/meta";
 
 const Profile = () => {
   const navigate = useNavigate()
@@ -47,6 +50,12 @@ const Profile = () => {
 
 
   return (
+    <>
+      <Helmet>
+                        <Meta title="Profile" />
+                        <Meta charSet="utf-8" />
+                        <title>Profile</title>
+        </Helmet>
     <div style={{ backgroundColor: 'white', padding: '30px', minHeight: '100vh' }}>
       <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Your Profile</h2>
 
@@ -146,6 +155,7 @@ const Profile = () => {
         <button className="text-white mb-3 btn  "onClick={handleLogout} style={{backgroundColor:"red"}}>Logout</button>
       </div>
     </div>
+    </>
 
   );
 };

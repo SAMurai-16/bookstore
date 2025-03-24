@@ -3,6 +3,7 @@ import Breadcrumb from './breadcrumb'
 import Meta from '../components/meta'
 import { Link, useNavigate } from 'react-router-dom'
 import CustomInput from './CustomInput'
+import { Helmet } from "react-helmet";
 import {useFormik} from "formik"
 import * as yup from 'yup';
 import {useDispatch, useSelector} from "react-redux"
@@ -50,8 +51,13 @@ const Login = () => {
   return (
     
     <>
-    <Meta title={"Login"}/>
+    <Helmet>
+      <Meta title="Login" />
+                            <Meta charSet="utf-8" />
+                            <title>Login</title>
     <Breadcrumb title="Login"/>
+    </Helmet>
+   
      <div className="login-wrapper py-5 home-wrapper-2">
         <div className="container-xxl">
             <div className="row">

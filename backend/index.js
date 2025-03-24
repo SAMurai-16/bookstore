@@ -14,6 +14,7 @@ const blogCatRoute = require("./routes/blogCatRoute")
 const brandRoute = require("./routes/brandRoute")
 const couponRoute = require("./routes/couponRoute")
 const uploadRoute = require("./routes/uploadRoute")
+const uploadpdfRoute = require("./routes/uploadpdfRoute")
 
 const cors = require("cors")
 const morgan = require("morgan")
@@ -38,6 +39,7 @@ app.use("/api/blogcategory",blogCatRoute);
 app.use("/api/brand",brandRoute)
 app.use("/api/coupon",couponRoute)
 app.use("/api/upload",uploadRoute)
+app.use("/api/uploadpdf",uploadpdfRoute)
 
 app.use(notFound);
 

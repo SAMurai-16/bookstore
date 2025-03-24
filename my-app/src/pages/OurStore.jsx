@@ -5,6 +5,9 @@ import Productcart from './Productcart';
 import { useDispatch, useSelector } from 'react-redux';
 import { getallProducts } from '../features/product/productSlice';
 import { getUserWishlist } from '../features/user/userSlice';
+import { Helmet } from "react-helmet";
+
+import Meta from "../components/meta";
 
 const OurStore = () => {
     const dispatch = useDispatch();
@@ -68,6 +71,13 @@ const OurStore = () => {
 
     return (
         <>
+        <Helmet>
+                            <Meta title="Store" />
+                            <Meta charSet="utf-8" />
+                            <title>Store</title>
+                        </Helmet>
+
+
           <div className="store-banner text-center m-2 position-relative" 
     style={{ height: 300, overflow: 'hidden', borderRadius: '15px' }}>
     

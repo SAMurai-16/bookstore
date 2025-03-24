@@ -6,15 +6,42 @@ import Meta from '../components/meta';
 import Productcart from './Productcart';
 import ImageZoom from 'react-image-zooom';
 import { getProduct } from '../features/product/productSlice';
-import { addProdToCart, getUserCart } from '../features/user/userSlice';
+import { addProdToCart, getallOrders, getUserCart } from '../features/user/userSlice';
 
 const SingleProduct = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
+    const [go,setGo] = useState(false)
 
      const ratingState = useSelector(state=>state?.prod?.singleproduct?.ratings)
+       const orders = useSelector(state => state?.auth?.Orders) || [] ;
+
+         useEffect(() => {
+           dispatch(getallOrders());
+         }, [dispatch]);
+
+
     const getProdId = useMemo(() => location.pathname.split('/')[2], [location]);
+
+    useEffect(() => {
+        const filterOrders = orders.flatMap((item) =>
+            item?.orderItems
+                .filter(orderItem => orderItem?.product?._id === getProdId)
+                .map(orderItem => orderItem.product._id)
+        );
+
+        if (filterOrders.includes(getProdId)) {
+            setGo(true);
+        } else {
+            setGo(false); // Ensures state consistency
+        }
+    }, [orders, getProdId]); // Runs when `orders` or `getProdId` changes
+
+    console.log(go);
+    
+
+    
     
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     
@@ -80,10 +107,12 @@ const SingleProduct = () => {
                                 </div>
                                 
                                 <div className="d-flex gap-3">
+                                { !go && (
                                     <button className="button" onClick={() => isAlreadyAdded ? navigate('/cart') : addToCart()}>
                                         {isAlreadyAdded ? "Go to Cart" : "Add to Cart"}
-                                    </button>
-                                    <Link to="/signup" className="button signup">Buy Now</Link>
+                                    </button>)
+}
+                                  {go &&( <Link to="/orders" className="button signup">Go to Orders</Link>)}
                                 </div>
                             </div>
                         </div>

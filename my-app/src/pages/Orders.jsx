@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getallOrders } from "../features/user/userSlice"; // Import order fetching action
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import Breadcrumb from "./breadcrumb";
+import Meta from "../components/meta";
 
 const Orders = () => {
   const dispatch = useDispatch();
@@ -12,6 +15,13 @@ const Orders = () => {
   }, [dispatch]);
 
   return (
+    <>
+        <Helmet>
+                        <Meta title="Orders" />
+                        <Meta charSet="utf-8" />
+                        <title>Orders</title>
+                    </Helmet>
+     
     <div className="container py-5">
       <h2 className="mb-4">My Orders</h2>
       {orders.length === 0 ? (
@@ -66,7 +76,9 @@ const Orders = () => {
         </div>
       )}
     </div>
+    </>
   );
+ 
 };
 
 export default Orders;

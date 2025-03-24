@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Breadcrumb from './breadcrumb'
 import {Helmet} from "react-helmet";
-import meta from '../components/meta';
+import Meta from '../components/meta';
 import BlogCard from './BlogCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { getallProducts } from '../features/product/productSlice';
@@ -36,6 +36,12 @@ const Blogs = () => {
     
     
     <>
+
+    <Helmet>
+                        <Meta title="Blogs" />
+                        <Meta charSet="utf-8" />
+                        <title>Blogs</title>
+                    </Helmet>
           <div className="store-banner text-center m-2 position-relative" 
     style={{ height: 300, overflow: 'hidden', borderRadius: '15px' }}>
     
