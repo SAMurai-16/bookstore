@@ -158,7 +158,7 @@ const checkOutHandler = async () =>{
         };
     
         // Send payment verification request
-        await fetch("http://localhost:5000/api/user/order/paymentVerification", {
+        await fetch(`${base_url}order/paymentVerification`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
