@@ -4,11 +4,11 @@ import Meta from "../components/meta";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
-import { config } from "../utils/axiosConfig";
+import {  base_url , config } from "../utils/axiosConfig";
 import { Helmet } from "react-helmet";
 import { createOrder, EmptyCart, getUserCart } from "../features/user/userSlice";
 import { getAllCoupons } from "../features/user/userSlice";
-import { base_url,config } from "../utils/axiosConfig";
+
 
 
 const Checkout = () => {
