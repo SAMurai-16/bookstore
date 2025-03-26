@@ -54,12 +54,10 @@ var productSchema = new mongoose.Schema({
         type:String,
         default:0
     },
-    pdf:{
-        filename: String,
-        fileId: mongoose.Schema.Types.ObjectId, // GridFS file ID
-        uploadDate: Date,
-        contentType: String,
-    }
+    files:[{
+        imgId:String,
+        url:String,
+    }],
 
 },
 {timestamps: true}

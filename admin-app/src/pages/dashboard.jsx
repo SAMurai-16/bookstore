@@ -4,7 +4,7 @@ import { GoArrowDownRight } from "react-icons/go";
 import { Column } from '@ant-design/plots';
 import { Button, Flex, Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrders } from '../features/auth/authSlice';
+import { getOrders } from '../features/orders/orderSlice';
 import { resetState } from '../features/bcategory/bcategorySlice';
 
 
@@ -35,14 +35,15 @@ const allMonths = [
   '7', '8', '9', '10', '11', '12'
 ];
  
-  const OrderState  = useSelector((state)=>state.auth.orders);
+  const OrderState  =  useSelector((state)=>state?.orders?.orders)
+    console.log(OrderState);
   
   
   const date = OrderState.map( (_,i)=>  new Date(OrderState[i].createdAt).toLocaleString())
 
   const month = date.map((_,i)=> date[i].split(",")[0].split("/")[1])
 
-  const amount = OrderState.map( (_,i)=>  OrderState[i].paymentIntent.amount)
+  const amount = OrderState.map( (_,i)=>  OrderState[i].totalPrice)
  
   for (let i = 0; i < month.length; i++) {
     total.push({ month: month[i], value: amount[i] });

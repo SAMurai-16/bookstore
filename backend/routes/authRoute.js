@@ -50,6 +50,8 @@ router.put('/reset-password/:token', resetpassword);
 router.get('/refresh', handleRefreshToken);
 router.get("/logout", logout);
 router.get('/coupon', getallCoupons);
+router.get('/get-allorders',authMiddleware,isAdmin,getOrders);
+
 router.get('/order',authMiddleware, getallOrders);
 
 // User-specific actions

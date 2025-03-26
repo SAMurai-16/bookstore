@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react'
 import { Button, Flex, Table } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
-import { getOrders } from '../features/auth/authSlice';
+import { getOrders } from '../features/orders/orderSlice';
+
 
 
 const columns = [
@@ -30,12 +31,7 @@ const columns = [
       title: 'Amount',
       dataIndex: 'amount',
     },
-    {
 
-      title: 'Status',
-      dataIndex: 'status',
-    },
-    
     {
       title: 'Action',
       dataIndex: 'action',
@@ -48,25 +44,28 @@ const columns = [
 const Orders = () => {
   const dispatch = useDispatch();
   useEffect(()=>{dispatch(getOrders())},[])
-  const state = useSelector((state)=>state.auth.orders)
+  const state = useSelector((state)=>state?.orders?.orders)
+  console.log(state);
+  
 
   const dataSource = Array.from({
     length: state.length,
   }).map((_, i) => ({
     key: i,
-    name: state[i].orderby.firstname,
+    name: state[i].user?.firstname + " " + state[i].user?.lastname  ,
     order: state[i]._id ,
-    product: state[i].products.map((i,j)=>{
+    product: state[i].orderItems.map((i,j)=>{
       return( 
         
         <ul key={j}>
-          <p>{i.product.title}</p>
+          <p>{i.product?.title}</p>
+          
           </ul>
           
       )
     }),
-    mobile: state[i].mobile,
-    amount: state[i].paymentIntent.amount,
+    
+    amount: state[i].totalPrice,
     date:new Date(state[i].createdAt).toLocaleString()
 
     

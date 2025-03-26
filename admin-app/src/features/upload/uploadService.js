@@ -16,5 +16,17 @@ const deleteImg = async(id)=>{
     return response.data;
 }
 
-const uploadService = {uploadImg,deleteImg}
+
+const uploadpdf = async(data)=>{
+    const response  = await axios.post(`${base_url}uploadpdf/`, data ,config)
+    return response.data;
+}
+
+const deletepdf = async(id)=>{
+    
+    const response  = await axios.delete(`${base_url}upload/delete-img/${id}`,config)
+    return response.data;
+}
+
+const uploadService = {uploadImg,deleteImg,uploadpdf,deletepdf}
 export default uploadService;

@@ -23,7 +23,9 @@ import Orders from "./pages/Orders"
 import Profile from "./pages/Profile"
 import ResetPassword from "./pages/resetPassword"
 import { PrivateRoutes } from "./routing/protectedRoutes"
+
 import { OpenRoutes } from "./routing/openRoutes"
+import Read from "./pages/Read"
 
 const App = () => {
   return (
@@ -43,6 +45,7 @@ const App = () => {
          <Route path="login" element={<Login/>}/>
          <Route path="profile" element={<Profile/>}/>
          <Route path="orders" element={<Orders/>}/>
+         <Route path="orders/:id" element={<Read/>}/>
          <Route path="blog" element={<Blogs/>}/>
          <Route path="product/:id/review" element={<Review/>}/>
          <Route path="checkout" element={<PrivateRoutes><Checkout/></PrivateRoutes>}/>

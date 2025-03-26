@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getBrands } from '../features/brand/brandSlice';
 import { getCategories } from '../features/category/categorySlice';
 import Dropzone from 'react-dropzone'
-import { delImg, uploadImg } from '../features/upload/uploadSlice';
+import { delImg, delpdf, uploadImg, uploadpdf } from '../features/upload/uploadSlice';
 import { createProduct, getaProduct, updateProduct } from '../features/product/productSlice';
 import {useLocation, useNavigate} from "react-router-dom"
 import { ToastContainer, toast } from 'react-toastify';
@@ -42,7 +42,8 @@ const AddProduct = () => {
         category:'',
         quantity:'',
         images:'',
-        tag:""
+        tag:"",
+        files:""
       },
         validationSchema: Yup.object({
           title: Yup.string()
@@ -82,6 +83,7 @@ const AddProduct = () => {
       const Brandstate = useSelector((state)=>state.brand.brands)
       const categoryState = useSelector((state)=>state.category.categories)
       const ImgState = useSelector((state)=>state.image.images)
+      const pdfState = useSelector((state)=>state.image.files)
       const createdProduct = useSelector((state)=>state.product)
 
       const {isSuccess,isError,isLoading}= createdProduct
@@ -107,7 +109,15 @@ const AddProduct = () => {
 
       }
     )
+    const file = [];
+    pdfState.forEach((i)=>{
+      file.push({
+        imgId: i.imgId,
+        url: i.url
+      })
 
+    }
+  )
       const dispatch = useDispatch()
       const navigate = useNavigate()
       const [images,Setimages] = useState([])
@@ -115,7 +125,9 @@ const AddProduct = () => {
       useEffect(()=>{dispatch(getCategories())},[])
       useEffect(()=>{
         formik.values.images = img
-      },[img])
+        formik.values.files = file
+
+      },[img,file])
 
 
       
@@ -271,6 +283,43 @@ const AddProduct = () => {
 
               })}
             </div>
+
+
+            <div>
+      {/* DropZone */}
+      <div className="bg-white border mb-3 p-5 text-center">
+        <Dropzone
+          onDrop={(acceptedFiles) => dispatch(uploadpdf(acceptedFiles))}
+          accept={{ "application/pdf": [] }} // Accept only PDFs
+          multiple
+        >
+          {({ getRootProps, getInputProps }) => (
+            <section>
+              <div {...getRootProps()} style={{ cursor: "pointer" }}>
+                <input {...getInputProps()} />
+                <p>Drag & drop PDF files here, or click to select</p>
+              </div>
+            </section>
+          )}
+        </Dropzone>
+      </div>
+
+      {/* PDF Previews */}
+      <div className="show-pdfs d-flex flex-wrap gap-3">
+        {pdfState.map((pdf, index) => (
+          <div className="position-relative d-flex align-items-center" key={index}>
+            <button
+              onClick={() => dispatch(delpdf(pdf.id))}
+              className="btn-close position-absolute"
+              style={{ top: "4px", left: "4px" }}
+            ></button>
+            <a href={pdf.url} target="_blank" rel="noopener noreferrer">
+              📄 {pdf.name || `PDF ${index + 1}`}
+            </a>
+          </div>
+        ))}
+      </div>
+    </div>
 
         {/* Submit Button */}
         <button 

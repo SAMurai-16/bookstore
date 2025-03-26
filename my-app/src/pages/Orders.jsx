@@ -49,10 +49,17 @@ const Orders = () => {
                         className="rounded"
                       />
                       <div>
-                        <p className="mb-1 ml-2 fw-bold">{item?.product?.title}</p>
+                        <p className="mb-1 ml-2 fw-bold">{item?.product?.title}
+                          <br/>
+                          <Link to={`${item?.product?._id}`}>Read</Link>
+                        </p>
+
                         
                       </div>
+                      
+                      
                     </div>
+                    
                   ))}
 
                   {/* Price, Status & Actions */}

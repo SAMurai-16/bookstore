@@ -7,11 +7,13 @@ import categoryReducer from "../features/category/categorySlice"
 import blogReducer from "../features/blog/blogSlice"
 import bcategoryReducer from "../features/bcategory/bcategorySlice"
 import uploadImageReducer from "../features/upload/uploadSlice"
+import orderReducer from "../features/orders/orderSlice"
 
 
 export const store = configureStore({
     reducer:
         {auth: authReducer,
+        orders: orderReducer,
         customer:customerReducer,
         product:productReducer,
         brand:brandReducer, 

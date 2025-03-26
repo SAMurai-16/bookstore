@@ -9,6 +9,7 @@ import { AiFillEdit } from "react-icons/ai";
 import { resetState } from '../features/bcategory/bcategorySlice';
 import { Modal } from 'antd';
 import CustomModal from '../components/CustomModal';
+import { getOrders } from '../features/orders/orderSlice';
 
 const columns = [
     {
@@ -46,7 +47,7 @@ const BrandList = () => {
  
   useEffect(()=>{
     dispatch(resetState())
-
+    dispatch(getOrders())
     dispatch(getBrands())
   },[])
 

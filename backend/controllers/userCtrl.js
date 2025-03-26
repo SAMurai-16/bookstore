@@ -557,20 +557,18 @@ const createOrder = asynchandler(async(req,res)=>{
 })
 
 const getOrders = asynchandler(async(req,res)=>{
-    const{_id} = req.user;
     try{
-        const userorders = await Order.findOne({
-            orderby:_id
-        }).populate("products.product")
-        .populate("orderby")
-        .exec()
-        res.json(userorders)
+        const getOrders = await Order.find().populate("user").populate("orderItems.product");
+        console.log("hhi");
+        
+        res.json(getOrders)
+
     }
     catch(error){
-
-        throw new Error(error);
+        throw new Error(error)
     }
 })
+
 
 
 
@@ -656,7 +654,8 @@ module.exports = { CreateUser,
     createCoupon,
     getallCoupons,
     applyCoupon,
-    getallOrders
+    getallOrders,
+    getOrders
 
     };
  
