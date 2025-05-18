@@ -5,23 +5,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUser } from '../features/user/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet";
-import Breadcrumb from "./breadcrumb";
 import Meta from "../components/meta";
 
 const Profile = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const [edit, setEdit] = useState(false);
 
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     localStorage.clear();
-    navigate("/")
-    window.location.reload()
-   
-  }
+    navigate("/");
+    window.location.reload();
+  };
 
-  // Formik Form
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -39,124 +36,148 @@ const Profile = () => {
         .required('Mobile number is required'),
     }),
     onSubmit: async (values) => {
-      dispatch(updateUser(values))
-
-      console.log('Updated Values:', values);
+      dispatch(updateUser(values));
       alert('Profile Updated Successfully!');
-      setEdit(false); // Disable edit mode after saving
+      setEdit(false);
     },
   });
-
-
 
   return (
     <>
       <Helmet>
-                        <Meta title="Profile" />
-                        <Meta charSet="utf-8" />
-                        <title>Profile</title>
-        </Helmet>
-    <div style={{ backgroundColor: 'white', padding: '30px', minHeight: '100vh' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Your Profile</h2>
+        <Meta title="Profile" />
+        <Meta charSet="utf-8" />
+        <title>Profile</title>
+      </Helmet>
 
-      {/* Edit Button */}
-      <div className="text-center mb-3">
-        {!edit ? (
-          <button className="btn btn-primary" onClick={() => setEdit(true)}>
-            Edit Profile
-          </button>
-        ) : (
-          <button className="btn btn-secondary" onClick={() => setEdit(false)}>
-            Cancel
-          </button>
-        )}
-      </div>
+      <div style={{
+        backgroundColor: '#fafafa',
+        padding: '40px 20px',
+        minHeight: '100vh',
+        fontFamily: "'Segoe UI', sans-serif",
+        color: '#333'
+      }}>
+        <div style={{
+          maxWidth: '600px',
+          margin: '0 auto',
+          backgroundColor: '#f2f2f2',
+          padding: '30px',
+          borderRadius: '16px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.06)'
+        }}>
+          <h2 style={{
+            textAlign: 'center',
+            marginBottom: '25px',
+            fontWeight: '600'
+          }}>
+            Your Profile
+          </h2>
 
-      {/* Form */}
-      <form onSubmit={formik.handleSubmit} style={{ maxWidth: '500px', margin: '0 auto' }}>
-        {/* First Name */}
-        <div className="mb-3">
-          <label className="form-label">First Name</label>
-          <input
-            type="text"
-            name="firstname"
-            className="form-control"
-            placeholder="Enter first name"
-            onChange={formik.handleChange}
-            value={formik.values.firstname}
-            readOnly={!edit}
-          />
-          {formik.touched.firstname && formik.errors.firstname && (
-            <div className="text-danger">{formik.errors.firstname}</div>
-          )}
-        </div>
+          {/* Edit Button */}
+          <div className="text-center mb-4">
+            {!edit ? (
+              <button
+                className="btn"
+                onClick={() => setEdit(true)}
+                style={{
+                  backgroundColor: '#FFA500',
+                  border: 'none',
+                  color: 'white',
+                  padding: '10px 20px',
+                  borderRadius: '8px'
+                }}
+              >
+                Edit Profile
+              </button>
+            ) : (
+              <button
+                className="btn"
+                onClick={() => setEdit(false)}
+                style={{
+                  backgroundColor: '#ccc',
+                  border: 'none',
+                  padding: '10px 20px',
+                  borderRadius: '8px'
+                }}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
 
-        {/* Last Name */}
-        <div className="mb-3">
-          <label className="form-label">Last Name</label>
-          <input
-            type="text"
-            name="lastname"
-            className="form-control"
-            placeholder="Enter last name"
-            onChange={formik.handleChange}
-            value={formik.values.lastname}
-            readOnly={!edit}
-          />
-          {formik.touched.lastname && formik.errors.lastname && (
-            <div className="text-danger">{formik.errors.lastname}</div>
-          )}
-        </div>
+          {/* Form */}
+          <form onSubmit={formik.handleSubmit}>
+            {['firstname', 'lastname', 'mobile', 'email'].map((field, i) => (
+              <div className="mb-3" key={i}>
+                <label className="form-label" style={{ fontWeight: '500', marginBottom: '6px' }}>
+                  {field === 'firstname' ? 'First Name' :
+                   field === 'lastname' ? 'Last Name' :
+                   field === 'mobile' ? 'Mobile No.' :
+                   'Email'}
+                </label>
+                <input
+                  type={field === 'email' ? 'email' : 'text'}
+                  name={field}
+                  className="form-control"
+                  placeholder={`Enter ${field}`}
+                  onChange={formik.handleChange}
+                  value={formik.values[field]}
+                  readOnly={!edit}
+                  style={{
+                    borderRadius: '8px',
+                    border: '1px solid #ccc',
+                    padding: '10px',
+                    width: '100%',
+                    backgroundColor: edit ? '#fff' : '#eee'
+                  }}
+                />
+                {formik.touched[field] && formik.errors[field] && (
+                  <div className="text-danger" style={{ fontSize: '0.875rem', marginTop: '5px' }}>
+                    {formik.errors[field]}
+                  </div>
+                )}
+              </div>
+            ))}
 
-        {/* Mobile Number */}
-        <div className="mb-3">
-          <label className="form-label">Mobile No.</label>
-          <input
-            type="text"
-            name="mobile"
-            className="form-control"
-            placeholder="Enter mobile number"
-            onChange={formik.handleChange}
-            value={formik.values.mobile}
-            readOnly={!edit}
-          />
-          {formik.touched.mobile && formik.errors.mobile && (
-            <div className="text-danger">{formik.errors.mobile}</div>
-          )}
-        </div>
+            {/* Save Button */}
+            {edit && (
+              <div className="text-center mt-4">
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{
+                    backgroundColor: '#FFA500',
+                    border: 'none',
+                    color: 'white',
+                    padding: '10px 25px',
+                    borderRadius: '8px'
+                  }}
+                >
+                  Save Changes
+                </button>
+              </div>
+            )}
+          </form>
 
-        {/* Email */}
-        <div className="mb-3">
-          <label className="form-label">Email</label>
-          <input
-            type="email"
-            name="email"
-            className="form-control"
-            placeholder="Enter email"
-            onChange={formik.handleChange}
-            value={formik.values.email}
-            readOnly={!edit}
-          />
-          {formik.touched.email && formik.errors.email && (
-            <div className="text-danger">{formik.errors.email}</div>
-          )}
-        </div>
-
-        {/* Submit Button */}
-        {edit && (
-          <div className="text-center">
-            <button type="submit" className="btn btn-success">
-              Save Changes
+          {/* Logout */}
+          <div className="text-center mt-5">
+            <button
+              onClick={handleLogout}
+              className="btn"
+              style={{
+                backgroundColor: '#d9534f',
+                color: 'white',
+                padding: '10px 20px',
+                border: 'none',
+                borderRadius: '8px'
+              }}
+            >
+              Logout
             </button>
           </div>
-        )}
-      </form>
-      <div className='text-center mt-10 py-5'>
-        <button className="text-white mb-3 btn  "onClick={handleLogout} style={{backgroundColor:"red"}}>Logout</button>
+        </div>
       </div>
-    </div>
     </>
-
   );
 };
 

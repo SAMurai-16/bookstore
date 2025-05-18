@@ -4,6 +4,8 @@ import { useDispatch,useSelector } from 'react-redux';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { Typeahead } from 'react-bootstrap-typeahead';
 import 'react-bootstrap-typeahead/css/Typeahead.css'
+import '../index.css';
+
 
 const Header = () => {
   const navigate = useNavigate()
@@ -56,7 +58,7 @@ const Header = () => {
             {/* Logo */}
             <div className='col-2'>
               <h2>
-                <Link to='/' className='text-white'>Bookstore</Link>
+                <Link to='/' className='text-white'>BookedIn</Link>
               </h2>
             </div>
 

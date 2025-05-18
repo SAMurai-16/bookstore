@@ -195,12 +195,7 @@ const OurStore = () => {
                                     </div>
                                     <div className='d-flex align-items-center grid gap-15'>
                                         <p className="totalproducts mb-0">{productState.length}  Products</p>
-                                        <div className='d-flex gap-10 align-items-center'>
-                                            <img onClick={() => setGrid(12)} src="images/gr.svg" alt="Grid 12" className='d-block img-fluid' />
-                                            <img onClick={() => setGrid(6)} src="images/gr2.svg" alt="Grid 6" className='d-block img-fluid' />
-                                            <img onClick={() => setGrid(4)} src="images/gr3.svg" alt="Grid 4" className='d-block img-fluid' />
-                                            <img onClick={() => setGrid(3)} src="images/gr4.svg" alt="Grid 3" className='d-block img-fluid' />
-                                        </div>
+                                 
                                     </div>
                                 </div>
                             </div>

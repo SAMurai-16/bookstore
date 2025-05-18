@@ -172,3 +172,150 @@ code {
     font-size: 14px;
   }
 }
+/* custom.css or inside your main CSS */
+.header-top-strip,
+.header-upper
+ {
+  background-color: #eff0f1; /* Light grayish/off-white */
+}
+
+.header-bottom {
+  background-color: #f5f5f7; /* Light grayish/off-white */
+}
+
+.header-top-strip a,
+
+.header-bottom a,
+.header-upper-links p,
+.menu-links a {
+  color: rgb(0, 0, 0) !important;
+}
+
+.menu-links a:hover {
+  color:rgb(255, 119, 0) !important;
+}
+.header-upper-links .badge {
+  color: rgb(255, 119, 0) !important;
+}
+
+.header-upper a{
+  color: rgb(255, 119, 0) !important;
+}
+
+
+/* Footer Styles */
+footer {
+  background-color: #eff0f1; /* Light grayish/off-white */
+}
+
+footer h4,
+footer a,
+footer p,
+footer address {
+  color: rgb(255, 119, 0) !important; /* Orange text */
+}
+
+.footer-links a:hover {
+  color: darkorange !important;
+  text-decoration: underline;
+}
+
+
+.footer-links a{
+  color: rgb(0, 0, 0)!important;
+  
+}
+
+
+.social-icons a {
+  color: rgb(255, 119, 0) !important;
+}
+
+.input-group-text,
+.form-control {
+  border-color: #ccc;
+}
+
+.input-group-text {
+  background-color: #fff;
+  color: rgb(255, 119, 0);
+  border-left: none;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: rgb(255, 119, 0);
+}
+
+
+/* Login Wrapper */
+.login-wrapper {
+  background-color: #f4f5f6; /* light off-white background */
+  min-height: 100vh;
+}
+
+/* Auth Card */
+.auth-card {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Text Elements */
+.auth-card h3,
+.auth-card label,
+.auth-card .forgot,
+.auth-card .error {
+  color: rgb(255, 119, 0); /* orange text */
+}
+
+.auth-card .forgot {
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+
+/* Buttons */
+.button {
+  background-color: rgb(255, 119, 0);
+  color: #fff;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 10px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: darkorange;
+  color: #fff;
+}
+
+.button.signup {
+  background-color: #ffffff;
+  border: 2px solid rgb(255, 119, 0);
+  color: rgb(255, 119, 0);
+}
+
+.button.signup:hover {
+  background-color: rgb(255, 119, 0);
+  color: #ffffff;
+}
+
+/* Input Fields */
+.form-control {
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.form-control:focus {
+  border-color: rgb(255, 119, 0);
+  box-shadow: none;
+}
+
+/* Error Styling */
+.error {
+  font-size: 0.85rem;
+  margin-top: 5px;
+}

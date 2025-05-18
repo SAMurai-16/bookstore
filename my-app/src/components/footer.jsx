@@ -1,18 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BsLinkedin, BsInstagram, BsGithub, BsYoutube } from 'react-icons/bs';
+import "../index.css"
 
 const Footer = () => {
   return (
     <>
       {/* Newsletter Signup */}
-      <footer className='py-4 px-5'>
+      <footer className='py-4 px-5 bg-white'>
         <div className="container-xxl">
           <div className="row align-items-center">
             <div className="col-md-5">
               <div className='footer-top-data d-flex gap-30 align-items-center text-white'>
                 <img src="images/newsletter.png" alt="newsletter" />
-                <h2>Subscribe for Book Updates</h2>
+                <h2 className='text-dark'>Subscribe for Book Updates</h2>
               </div>
             </div>
             <div className="col-md-7">
@@ -32,10 +33,10 @@ const Footer = () => {
             
             {/* Contact Section */}
             <div className="col-md-4">
-              <h4 className='text-white'>Contact Us</h4>
+              <h4 className='text-dark'>Contact Us</h4>
               <div className='footer-links d-flex flex-column'>
-                <address className='text-white fs-6'>
-                  Book Haven, 12th Street,<br />
+                <address className='text-dark fs-6'>
+                  BookedIn, 12th Street,<br />
                   New Delhi, India<br />
                   Pincode: 110001
                 </address>
@@ -52,7 +53,7 @@ const Footer = () => {
 
             {/* Information Section */}
             <div className="col-md-3">
-              <h4 className='text-white'>Information</h4>
+              <h4 className='text-dark'>Information</h4>
               <div className='footer-links d-flex flex-column'>
                 <Link className="text-white py-2">Privacy Policy</Link>
                 <Link className="text-white py-2">Refund Policy</Link>
@@ -64,7 +65,7 @@ const Footer = () => {
 
             {/* Customer Service Section */}
             <div className="col-md-3">
-              <h4 className='text-white'>Customer Service</h4>
+              <h4 className='text-dark'>Customer Service</h4>
               <div className='footer-links d-flex flex-column'>
                 <Link className="text-white py-2">Order Tracking</Link>
                 <Link className="text-white py-2">FAQs</Link>
@@ -75,7 +76,7 @@ const Footer = () => {
 
             {/* Book Categories Section */}
             <div className="col-md-2">
-              <h4 className='text-white'>Categories</h4>
+              <h4 className='text-dark'>Categories</h4>
               <div className='footer-links d-flex flex-column'>
                 <Link className="text-white py-2">Fiction</Link>
                 <Link className="text-white py-2">Non-Fiction</Link>
@@ -89,12 +90,12 @@ const Footer = () => {
       </footer>
 
       {/* Copyright Section */}
-      <footer className='py-3'>
+      <footer className='py-3 bg-white'>
         <div className="container-xxl">
           <div className="row">
             <div className="col-12">
-              <p className='text-center text-white mb-0'>
-                &copy; {new Date().getFullYear()} Book Haven | Powered by SAMurai
+              <p className='text-center text-dark mb-0'>
+                &copy; {new Date().getFullYear()} BookedIn | Powered by SAMurai
               </p>
             </div>
           </div>
