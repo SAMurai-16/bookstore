@@ -8,6 +8,7 @@ import { config } from "../utils/axiosConfig";
 import { Helmet } from "react-helmet";
 import { createOrder, EmptyCart, getUserCart } from "../features/user/userSlice";
 import { getAllCoupons } from "../features/user/userSlice";
+import { base_url} from "../utils/axiosConfig";
 
 const Checkout = () => {
   const navigate = useNavigate()
