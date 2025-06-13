@@ -64,7 +64,16 @@ export const delpdf = createAsyncThunk('delete/pdf', async (id, thunkAPI) => {
 export const UploadImageSlice= createSlice({
       name:"uplaodimages",
         initialState,
-        reducers:{},
+        reducers:{
+                resetUploadState: (state) => {
+      state.images = [];
+      state.files = [];
+      state.isError = false;
+      state.isLoading = false;
+      state.isSuccess = false;
+      state.message = "";
+    }
+        },
         extraReducers:(builder)=>{
             builder.addCase(uploadImg.pending,(state)=>{
                 state.isLoading = true;
@@ -140,5 +149,5 @@ export const UploadImageSlice= createSlice({
         }
     })
 
-
+export const { resetUploadState } = UploadImageSlice.actions;
     export default UploadImageSlice.reducer

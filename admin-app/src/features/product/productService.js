@@ -1,15 +1,6 @@
 import axios from "axios"
 import { base_url } from "../../utils/base_url"
-
-const getTokenfromLocalStorage = localStorage.getItem("user") 
-    ? JSON.parse(localStorage.getItem("user")) 
-    : null;
-
-export const config = {
-    headers: {
-        Authorization: getTokenfromLocalStorage ? `Bearer ${getTokenfromLocalStorage.token}` : "",
-    }
-};
+import { getConfig } from "../auth/authService"
 
 
 
@@ -20,21 +11,21 @@ const getProducts = async()=>{
 }
 
 const createProduct = async (productData) => {
-    const response = await axios.post(`${base_url}product/`, productData, config);
+    const response = await axios.post(`${base_url}product/`, productData, getConfig());
     return response.data;
     
     
   };
 
   const getaProduct = async (id) => {
-    const response = await axios.get(`${base_url}product/${id}`, config);
+    const response = await axios.get(`${base_url}product/${id}`, getConfig());
     return response.data;
     
     
   };
 
   const deleteProduct = async (id) => {
-    const response = await axios.delete(`${base_url}product/${id}`, config);
+    const response = await axios.delete(`${base_url}product/${id}`, getConfig());
     return response.data;
     
     
@@ -50,7 +41,7 @@ const createProduct = async (productData) => {
         quantity: data.ProductData.qunatity,
         images: data.ProductData.images,
     },
-        config)
+        getConfig())
     
     return response.data
 

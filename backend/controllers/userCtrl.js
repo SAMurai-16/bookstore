@@ -71,12 +71,13 @@ const loginUserCtrl = asynchandler(async (req,res)=> {
     const updateuser = await User.findByIdAndUpdate(findUser.id , {RefreshToken:RefreshToken},
         {new:true}
     )
-    res.cookie('RefreshToken',RefreshToken,{
-        httpOnly:true,
-        maxAge: 72*60*60*1000,
-    }
+res.cookie("RefreshToken", RefreshToken, {
+  httpOnly: true,
+  secure: false, // ✅ set to true only if using HTTPS
+  sameSite: "lax", // ❗ 'lax' works for most local dev flows, 'none' if cross-site with HTTPS
+  maxAge: 72 * 60 * 60 * 1000,
+});
 
-    )
         res.json({
             _id : findUser?._id,
             firstname:findUser?.firstname,

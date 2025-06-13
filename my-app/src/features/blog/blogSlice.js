@@ -4,9 +4,9 @@ import { blogService } from "./blogService"
 
 
 
-export const getallBlogs = createAsyncThunk("blog/getall",async(_,thunkAPI)=>{
+export const getallBlogs = createAsyncThunk("blog/getall",async(data,thunkAPI)=>{
     try{
-        return await blogService.getblogs()
+        return await blogService.getblogs(data)
 
 
 

@@ -1,11 +1,13 @@
 import axios from "axios"
-import { base_url,config } from "../../utils/axiosConfig";
+import { base_url,getConfig } from "../../utils/axiosConfig";
 
 
 
 
-const getblogs = async()=>{
-    const response =await axios.get(`${base_url}blog/`);
+const getblogs = async(data)=>{
+
+
+    const response =await axios.get(`${base_url}blog?${data?.category? `category=${data?.category}&&`:""}${data?.minPrice? `price[gte]=${data?.minPrice}&&`:""}${data?.maxPrice? `price[lte]=${data?.maxPrice}&&`:""}${data?.sort? `sort=${data?.sort}&&`:""}`);
     if(response.data){
         return response.data;
     }

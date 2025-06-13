@@ -9,6 +9,7 @@ import * as yup from 'yup';
 import {useDispatch, useSelector} from "react-redux"
 import { loginUser } from '../features/user/userSlice';
 import "../index.css"
+import { useEffect } from 'react'
 
 
 
@@ -22,29 +23,23 @@ const Login = () => {
     const dispatch = useDispatch();
     const authState = useSelector(state=>state.auth)
     
-      const formik = useFormik({
-        initialValues: {
-          email:"",
-          password:""
-    
-        },
-        validationSchema:loginUpSchema, 
-        onSubmit: (values) => {
-         dispatch(loginUser(values))
-
-         setTimeout(()=>{
-          if(authState.isSuccess){
-            
-            
-
-            navigate("/")
-
-          }
-         },300)
-         
-        },
-      });
-
+    const formik = useFormik({
+      initialValues: {
+        email: "",
+        password: ""
+      },
+      validationSchema: loginUpSchema,
+      onSubmit: (values) => {
+        dispatch(loginUser(values));
+      },
+    });
+  
+   
+    useEffect(() => {
+      if (authState.isSuccess) {
+        navigate("/");
+      }
+    }, [authState.isSuccess, navigate]);
 
 
 
@@ -67,8 +62,14 @@ const Login = () => {
                     <div>
                         <h3 className='text-center mb-3'>Login</h3>
                     </div>
+                    
+  {authState.isError && (
+    <div className="alert alert-danger text-center" role="alert">
+      { "Invalid email or password"}
+    </div>
+  )}
                     <form action="" onSubmit={formik.handleSubmit} className="d-flex flex-column gap-30">
-                    < CustomInput type="text" placeholder="text" name="email"
+                    < CustomInput type="text" placeholder="Email" name="email"
                     value={formik.values.email} 
                     onChange={formik.handleChange("email")}
                     onBlur={formik.handleBlur("email")}/>

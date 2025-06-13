@@ -38,6 +38,9 @@ const AddBlog = () => {
       const bCategoryState = useSelector((state)=>state.bcategory.bcategory)
       const ImgState = useSelector((state)=>state.image.images)
       const BlogState = useSelector((state)=>state.blog)
+      const singleBlog = useSelector((state)=>
+       state.blog
+      )
 
       
       const {isSuccess,isError,isLoading,blogCreated,BlogName,BlogDesc,BlogCat,BlogImg}= BlogState
@@ -45,14 +48,16 @@ const AddBlog = () => {
 
       
 
+
+      
+
       const formik = useFormik({
-            enableReinitialize:true,
+            
             initialValues: {
-              
-              title:'',
-              description:'',
-              category:'',
-              images:''
+              title:singleBlog?.BlogName||'',
+              description:singleBlog?.BlogDesc ||'',
+              category:singleBlog?.BlogCat||'',
+              images:singleBlog?.images||''
             },
             validationSchema: Yup.object({
               title: Yup.string()
@@ -66,7 +71,7 @@ const AddBlog = () => {
             onSubmit: async (values) => {
               try {
                 if(getBlogId!==undefined){
-                  const data = { id: getBlogId , blogData: values}
+                  const data = { id: getBlogId , ProductData: values}
                   dispatch(updateBlog(data))
                   dispatch(resetState())
 
@@ -88,7 +93,22 @@ const AddBlog = () => {
               }
             },
           });
-       
+
+
+
+useEffect(() => {
+  if (getBlogId !== undefined) {
+    formik.setValues({
+      title: singleBlog.BlogName || '',
+      description: singleBlog.BlogDesc || '',
+      category: singleBlog.BlogCat || '',
+      images: singleBlog.images || ''
+    });
+  }
+}, [singleBlog.BlogName]); 
+
+
+
            
                   useEffect(()=>{
                          if(isSuccess && blogCreated){
@@ -114,9 +134,10 @@ const AddBlog = () => {
                  
                        }
                      )
-                     useEffect(()=>{
-                       formik.values.images = img
-                     },[img])
+useEffect(() => {
+  formik.setFieldValue("images", img);
+}, [ImgState]);
+
                  
 
 
@@ -197,7 +218,9 @@ const AddBlog = () => {
               {ImgState.map((i,j)=>{
                 return(
                   <div className="position-relative d-flex " key={j}>
-                    <button onClick={()=> dispatch(delImg(i.imgId))}  className='btn-close position-absolute'
+                    <button onClick={(e)=> {
+                      e.preventDefault()
+                      dispatch(delImg(i.imgId))}}  className='btn-close position-absolute'
                     style={{top:"4px",left:"4px"}}>
                     </button>
                     <img src={i.url} alt="" width={200} height={200} />

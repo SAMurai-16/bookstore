@@ -2,18 +2,21 @@ import {createSlice, createAsyncThunk} from "@reduxjs/toolkit"
 import { authService } from "./userService"
 
 
-export const registerUser = createAsyncThunk("auth/register",async(userData,thunkAPI)=>{
-    try{
-        return await authService.register(userData)
-
-
-
+export const registerUser = createAsyncThunk(
+    "auth/register",
+    async (userData, thunkAPI) => {
+      try {
+        return await authService.register(userData);
+      } catch (error) {
+        // Safely get the error message from the Axios error response
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          "Registration failed";
+        return thunkAPI.rejectWithValue(message);
+      }
     }
-    catch(error){
-        return thunkAPI.rejectWithValue(error)
-
-    }
-})
+  );
 
 export const loginUser = createAsyncThunk("auth/login",async(userData,thunkAPI)=>{
     try{

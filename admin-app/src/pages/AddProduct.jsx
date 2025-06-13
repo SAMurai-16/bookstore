@@ -5,6 +5,7 @@ import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { getBrands } from '../features/brand/brandSlice';
 import { getCategories } from '../features/category/categorySlice';
+import { resetUploadState } from '../features/upload/uploadSlice';
 import Dropzone from 'react-dropzone'
 import { delImg, delpdf, uploadImg, uploadpdf } from '../features/upload/uploadSlice';
 import { createProduct, getaProduct, updateProduct } from '../features/product/productSlice';
@@ -15,6 +16,8 @@ import { resetState } from '../features/bcategory/bcategorySlice';
 
 
 const AddProduct = () => {
+      const dispatch = useDispatch()
+      const navigate = useNavigate()
      const location = useLocation();
      const getProductId = location.pathname.split("/")[3]
 
@@ -29,22 +32,27 @@ const AddProduct = () => {
            },[])
 
 
-     
+           const Prod = useSelector((state)=>state.product.getProduct)
+
+
+
+    
 
      const formik = useFormik({
+    
       
-      initialValues: {
-          
-        title: '',
-        description:'',
-        price:'',
-        brand:'',
-        category:'',
-        quantity:'',
-        images:'',
-        tag:"",
-        files:""
-      },
+initialValues: {
+  title: Prod?.title || '',
+  description: Prod?.description || '',
+  price: Prod?.price || '',
+  brand: Prod?.brand || '',
+  category: Prod?.category || '',
+  quantity: 1 || '',
+  images: Prod?.images[0]?.url || [],
+  tag: Prod?.tag || '',
+  files: Prod?.files || [],
+}
+,
         validationSchema: Yup.object({
           title: Yup.string()
             .required('Title is Required'),
@@ -62,10 +70,14 @@ const AddProduct = () => {
             if(getProductId!==undefined){
               const data = {id:getProductId , ProductData : values}
               dispatch(updateProduct(data))
+              
+              
+              dispatch(resetUploadState());
             }
             else{
 
               dispatch(createProduct(values));
+              dispatch(resetUploadState());
 
             }
              
@@ -86,6 +98,27 @@ const AddProduct = () => {
       const pdfState = useSelector((state)=>state.image.files)
       const createdProduct = useSelector((state)=>state.product)
 
+
+
+
+      useEffect(() => {
+  if (getProductId !== undefined && Prod?._id) {
+    formik.setValues({
+      title: Prod.title || '',
+      description: Prod.description || '',
+      price: Prod.price || '',
+      brand: Prod.brand || '',
+      category: Prod.category || '',
+      quantity: Prod.quantity || 1,
+      images: Prod.images || [],
+      tag: Prod.tag || '',
+      files: Prod.files || [],
+    });
+  }
+}, [Prod]);
+
+
+
       const {isSuccess,isError,isLoading}= createdProduct
       useEffect(()=>{
         if(isSuccess){
@@ -101,7 +134,7 @@ const AddProduct = () => {
 
 
       const img = [];
-      ImgState.forEach((i)=>{
+      ImgState?.forEach((i)=>{
         img.push({
           imgId: i.imgId,
           url: i.url
@@ -110,7 +143,7 @@ const AddProduct = () => {
       }
     )
     const file = [];
-    pdfState.forEach((i)=>{
+    pdfState?.forEach((i)=>{
       file.push({
         imgId: i.imgId,
         url: i.url
@@ -118,8 +151,7 @@ const AddProduct = () => {
 
     }
   )
-      const dispatch = useDispatch()
-      const navigate = useNavigate()
+
       const [images,Setimages] = useState([])
       useEffect(()=>{dispatch(getBrands())},[])
       useEffect(()=>{dispatch(getCategories())},[])
@@ -146,7 +178,7 @@ const AddProduct = () => {
           label="Product Name" 
           name="title"
           placeholder="Enter product name" 
-          onCh={formik.handleChange("title")}
+          onCh={formik.handleChange}
           type="text" 
           val= {formik.values.title}
         />
@@ -161,7 +193,7 @@ const AddProduct = () => {
           label="Product Description" 
           placeholder="Enter product Description" 
           name="description"
-          onCh={formik.handleChange("description")}
+          onCh={formik.handleChange}
           type="text" 
           val = {formik.values.description}
         />
@@ -271,10 +303,16 @@ const AddProduct = () => {
 </Dropzone>
             </div>
             <div className="show-images d-flex flex-wrap gap-3 ">
-              {ImgState.map((i,j)=>{
+              {ImgState?.map((i,j)=>{
                 return(
                   <div className="position-relative d-flex " key={j}>
-                    <button onClick={()=> dispatch(delImg(i.imgId))}  className='btn-close position-absolute'
+                    <button onClick={(e)=> {
+                      e.preventDefault()
+
+                      dispatch(delImg(i.imgId))} 
+
+                    }
+                     className='btn-close position-absolute'
                     style={{top:"4px",left:"4px"}}>
                     </button>
                     <img src={i.url} alt="" width={200} height={200} />
@@ -286,30 +324,28 @@ const AddProduct = () => {
 
 
             <div>
-      {/* DropZone */}
-      <div className="bg-white border mb-3 p-5 text-center">
-        <Dropzone
-          onDrop={(acceptedFiles) => dispatch(uploadpdf(acceptedFiles))}
-          accept={{ "application/pdf": [] }} // Accept only PDFs
-          multiple
-        >
-          {({ getRootProps, getInputProps }) => (
-            <section>
-              <div {...getRootProps()} style={{ cursor: "pointer" }}>
-                <input {...getInputProps()} />
-                <p>Drag & drop PDF files here, or click to select</p>
-              </div>
-            </section>
-          )}
-        </Dropzone>
+        {/*DropZone*/}
+            <div className='bg-white border mb-3 p-5 text-center'>
+            <Dropzone onDrop={(acceptedFiles) => dispatch(uploadpdf(acceptedFiles))}>
+      {({getRootProps, getInputProps}) => (
+        <section>
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+            <p>Drag 'n' drop some files here, or click to select files</p>
+          </div>
+        </section>
+      )}
+</Dropzone>
       </div>
 
       {/* PDF Previews */}
       <div className="show-pdfs d-flex flex-wrap gap-3">
-        {pdfState.map((pdf, index) => (
+        {pdfState?.map((pdf, index) => (
           <div className="position-relative d-flex align-items-center" key={index}>
             <button
-              onClick={() => dispatch(delpdf(pdf.id))}
+              onClick={(e) => {
+                e.preventDefault()
+                dispatch(delpdf(pdf.id))}}
               className="btn-close position-absolute"
               style={{ top: "4px", left: "4px" }}
             ></button>
