@@ -1,4 +1,4 @@
-export const base_url = "http://localhost:5000/api/";
+export const base_url = "https://bookstore-q7d5.onrender.com/";
 
 export const getConfig = () => {
     const tokenObj = localStorage.getItem("Accesstoken")
