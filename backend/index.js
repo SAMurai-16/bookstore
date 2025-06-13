@@ -29,6 +29,7 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
   'http://127.0.0.1:5174',
+  'https://bookstore-app-uan4.onrender.com'
 ];
 app.use(cors({
   origin: allowedOrigins,
