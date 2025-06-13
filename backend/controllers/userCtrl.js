@@ -74,7 +74,7 @@ const loginUserCtrl = asynchandler(async (req,res)=> {
 res.cookie("RefreshToken", RefreshToken, {
   httpOnly: true,
   secure: false, // ✅ set to true only if using HTTPS
-  sameSite: "lax", // ❗ 'lax' works for most local dev flows, 'none' if cross-site with HTTPS
+  sameSite: "none", // ❗ 'lax' works for most local dev flows, 'none' if cross-site with HTTPS
   maxAge: 72 * 60 * 60 * 1000,
 });
 
